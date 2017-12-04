@@ -1,0 +1,2326 @@
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m3
+   3              		.fpu softvfp
+   4              		.eabi_attribute 20, 1
+   5              		.eabi_attribute 21, 1
+   6              		.eabi_attribute 23, 3
+   7              		.eabi_attribute 24, 1
+   8              		.eabi_attribute 25, 1
+   9              		.eabi_attribute 26, 1
+  10              		.eabi_attribute 30, 1
+  11              		.eabi_attribute 34, 1
+  12              		.eabi_attribute 18, 4
+  13              		.thumb
+  14              		.syntax unified
+  15              		.file	"main.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.main,"ax",%progbits
+  20              		.align	2
+  21              		.global	main
+  22              		.thumb
+  23              		.thumb_func
+  24              		.type	main, %function
+  25              	main:
+  26              	.LFB64:
+  27              		.file 1 "main.c"
+   1:main.c        **** /**
+   2:main.c        **** * @mainpage ZumoBot Project
+   3:main.c        **** * @brief    You can make your own ZumoBot with various sensors.
+   4:main.c        **** * @details  <br><br>
+   5:main.c        ****     <p>
+   6:main.c        ****     <B>General</B><br>
+   7:main.c        ****     You will use Pololu Zumo Shields for your robot project with CY8CKIT-059(PSoC 5LP) from Cypress
+   8:main.c        ****     library has basic methods of various sensors and communications so that you can make what you w
+   9:main.c        ****     <br><br>
+  10:main.c        ****     </p>
+  11:main.c        ****     
+  12:main.c        ****     <p>
+  13:main.c        ****     <B>Sensors</B><br>
+  14:main.c        ****     &nbsp;Included: <br>
+  15:main.c        ****         &nbsp;&nbsp;&nbsp;&nbsp;LSM303D: Accelerometer & Magnetometer<br>
+  16:main.c        ****         &nbsp;&nbsp;&nbsp;&nbsp;L3GD20H: Gyroscope<br>
+  17:main.c        ****         &nbsp;&nbsp;&nbsp;&nbsp;Reflectance sensor<br>
+  18:main.c        ****         &nbsp;&nbsp;&nbsp;&nbsp;Motors
+  19:main.c        ****     &nbsp;Wii nunchuck<br>
+  20:main.c        ****     &nbsp;TSOP-2236: IR Receiver<br>
+  21:main.c        ****     &nbsp;HC-SR04: Ultrasonic sensor<br>
+  22:main.c        ****     &nbsp;APDS-9301: Ambient light sensor<br>
+  23:main.c        ****     &nbsp;IR LED <br><br><br>
+  24:main.c        ****     </p>
+  25:main.c        ****     
+  26:main.c        ****     <p>
+  27:main.c        ****     <B>Communication</B><br>
+  28:main.c        ****     I2C, UART, Serial<br>
+  29:main.c        ****     </p>
+  30:main.c        **** */
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 2
+
+
+  31:main.c        **** 
+  32:main.c        **** #include <project.h>
+  33:main.c        **** #include <stdio.h>
+  34:main.c        **** #include <time.h>
+  35:main.c        **** #include <stdlib.h>
+  36:main.c        **** #include "Motor.h"
+  37:main.c        **** #include "Ultra.h"
+  38:main.c        **** #include "Nunchuk.h"
+  39:main.c        **** #include "Reflectance.h"
+  40:main.c        **** #include "I2C_made.h"
+  41:main.c        **** #include "Gyro.h"
+  42:main.c        **** #include "Accel_magnet.h"
+  43:main.c        **** #include "IR.h"
+  44:main.c        **** #include "Ambient.h"
+  45:main.c        **** #include "Beep.h"
+  46:main.c        **** //#include "Reflectance.c"
+  47:main.c        **** 
+  48:main.c        **** 
+  49:main.c        **** 
+  50:main.c        **** int rread(void);
+  51:main.c        **** 
+  52:main.c        **** /**
+  53:main.c        ****  * @file    main.c
+  54:main.c        ****  * @brief   
+  55:main.c        ****  * @details  ** You should enable global interrupt for operating properly. **<br>&nbsp;&nbsp;&nbsp;
+  56:main.c        **** */
+  57:main.c        **** 
+  58:main.c        **** 
+  59:main.c        **** //battery level//
+  60:main.c        **** int main()
+  61:main.c        **** {
+  28              		.loc 1 61 0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 8
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 00B5     		push	{lr}
+  33              		.cfi_def_cfa_offset 4
+  34              		.cfi_offset 14, -4
+  35 0002 85B0     		sub	sp, sp, #20
+  36              		.cfi_def_cfa_offset 24
+  62:main.c        ****     struct sensors_ dig;
+  63:main.c        ****     
+  64:main.c        **** //    srand(time(NULL));
+  65:main.c        **** //    int r = rand();
+  66:main.c        ****     
+  67:main.c        ****     CyGlobalIntEnable; 
+  37              		.loc 1 67 0
+  38              		.syntax unified
+  39              	@ 67 "main.c" 1
+  40 0004 62B6     		CPSIE   i
+  41              	@ 0 "" 2
+  68:main.c        ****     UART_1_Start();
+  42              		.loc 1 68 0
+  43              		.thumb
+  44              		.syntax unified
+  45 0006 FFF7FEFF 		bl	UART_1_Start
+  46              	.LVL0:
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 3
+
+
+  69:main.c        ****     ADC_Battery_Start();        
+  47              		.loc 1 69 0
+  48 000a FFF7FEFF 		bl	ADC_Battery_Start
+  49              	.LVL1:
+  70:main.c        ****     int16 adcresult =0;
+  71:main.c        ****     float volts = 0.0;
+  72:main.c        **** 
+  73:main.c        ****     printf("\nBoot\n");
+  50              		.loc 1 73 0
+  51 000e 1848     		ldr	r0, .L8
+  52 0010 FFF7FEFF 		bl	puts
+  53              	.LVL2:
+  74:main.c        **** 
+  75:main.c        ****     //BatteryLed_Write(1); // Switch led on 
+  76:main.c        ****     BatteryLed_Write(0); // Switch led off 
+  54              		.loc 1 76 0
+  55 0014 0020     		movs	r0, #0
+  56 0016 FFF7FEFF 		bl	BatteryLed_Write
+  57              	.LVL3:
+  77:main.c        ****     //uint8 button;
+  78:main.c        ****     //button = SW1_Read(); // read SW1 on pSoC board
+  79:main.c        ****     motor_start();
+  58              		.loc 1 79 0
+  59 001a FFF7FEFF 		bl	motor_start
+  60              	.LVL4:
+  80:main.c        ****     reflectance_digital(&dig);
+  61              		.loc 1 80 0
+  62 001e 02A8     		add	r0, sp, #8
+  63 0020 FFF7FEFF 		bl	reflectance_digital
+  64              	.LVL5:
+  65              	.L2:
+  81:main.c        ****     while(SW1_Read())
+  66              		.loc 1 81 0 discriminator 1
+  67 0024 FFF7FEFF 		bl	SW1_Read
+  68              	.LVL6:
+  69 0028 0028     		cmp	r0, #0
+  70 002a FBD1     		bne	.L2
+  82:main.c        ****     {
+  83:main.c        ****     }
+  84:main.c        ****     CyDelay (1000);
+  71              		.loc 1 84 0
+  72 002c 4FF47A70 		mov	r0, #1000
+  73 0030 FFF7FEFF 		bl	CyDelay
+  74              	.LVL7:
+  75              	.L3:
+  85:main.c        ****     for(;;)
+  86:main.c        ****     {
+  87:main.c        ****         
+  88:main.c        ****         if(dig.l1 == 0 || dig.l3 == 0 || dig.r1 == 0 || dig.r3 == 0)
+  76              		.loc 1 88 0
+  77 0034 BDF80A30 		ldrh	r3, [sp, #10]
+  78 0038 43B1     		cbz	r3, .L4
+  79              		.loc 1 88 0 is_stmt 0 discriminator 1
+  80 003a BDF80830 		ldrh	r3, [sp, #8]
+  81 003e 2BB1     		cbz	r3, .L4
+  82              		.loc 1 88 0 discriminator 2
+  83 0040 BDF80C30 		ldrh	r3, [sp, #12]
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 4
+
+
+  84 0044 13B1     		cbz	r3, .L4
+  85              		.loc 1 88 0 discriminator 3
+  86 0046 BDF80E30 		ldrh	r3, [sp, #14]
+  87 004a 43B9     		cbnz	r3, .L5
+  88              	.L4:
+  89:main.c        ****         {
+  90:main.c        ****             motor_sharp_turn(1,0,255,255,100);
+  89              		.loc 1 90 0 is_stmt 1
+  90 004c 6423     		movs	r3, #100
+  91 004e 0093     		str	r3, [sp]
+  92 0050 FF23     		movs	r3, #255
+  93 0052 1A46     		mov	r2, r3
+  94 0054 0021     		movs	r1, #0
+  95 0056 0120     		movs	r0, #1
+  96 0058 FFF7FEFF 		bl	motor_sharp_turn
+  97              	.LVL8:
+  98 005c EAE7     		b	.L3
+  99              	.L5:
+  91:main.c        ****         }
+  92:main.c        ****         else{
+  93:main.c        ****         motor_sharp_turn(0,0,255,150,1);
+ 100              		.loc 1 93 0
+ 101 005e 0123     		movs	r3, #1
+ 102 0060 0093     		str	r3, [sp]
+ 103 0062 9623     		movs	r3, #150
+ 104 0064 FF22     		movs	r2, #255
+ 105 0066 0021     		movs	r1, #0
+ 106 0068 0846     		mov	r0, r1
+ 107 006a FFF7FEFF 		bl	motor_sharp_turn
+ 108              	.LVL9:
+ 109 006e E1E7     		b	.L3
+ 110              	.L9:
+ 111              		.align	2
+ 112              	.L8:
+ 113 0070 00000000 		.word	.LC0
+ 114              		.cfi_endproc
+ 115              	.LFE64:
+ 116              		.size	main, .-main
+ 117              		.global	__aeabi_fmul
+ 118              		.global	__aeabi_f2d
+ 119              		.section	.text.checkBat,"ax",%progbits
+ 120              		.align	2
+ 121              		.global	checkBat
+ 122              		.thumb
+ 123              		.thumb_func
+ 124              		.type	checkBat, %function
+ 125              	checkBat:
+ 126              	.LFB65:
+  94:main.c        ****         }
+  95:main.c        ****         }
+  96:main.c        ****     for(;;)
+  97:main.c        ****     {
+  98:main.c        ****         
+  99:main.c        ****         ADC_Battery_StartConvert();
+ 100:main.c        ****         if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) {   // wait for get ADC conver
+ 101:main.c        ****             adcresult = ADC_Battery_GetResult16();
+ 102:main.c        ****             volts = ADC_Battery_CountsTo_Volts(adcresult);                  // convert value to Vol
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 5
+
+
+ 103:main.c        ****         
+ 104:main.c        ****             // If you want to print value
+ 105:main.c        ****             printf("%d %f\r\n",adcresult, volts);
+ 106:main.c        ****         }
+ 107:main.c        ****         CyDelay(500);
+ 108:main.c        ****         
+ 109:main.c        ****     }
+ 110:main.c        ****  }   
+ 111:main.c        **** 
+ 112:main.c        **** float checkBat()
+ 113:main.c        **** {
+ 127              		.loc 1 113 0
+ 128              		.cfi_startproc
+ 129              		@ args = 0, pretend = 0, frame = 0
+ 130              		@ frame_needed = 0, uses_anonymous_args = 0
+ 131 0000 38B5     		push	{r3, r4, r5, lr}
+ 132              		.cfi_def_cfa_offset 16
+ 133              		.cfi_offset 3, -16
+ 134              		.cfi_offset 4, -12
+ 135              		.cfi_offset 5, -8
+ 136              		.cfi_offset 14, -4
+ 137              	.LVL10:
+ 114:main.c        ****     int16 adcresult =0;
+ 115:main.c        ****     float volts = 0.0;
+ 116:main.c        ****     ADC_Battery_StartConvert();
+ 138              		.loc 1 116 0
+ 139 0002 FFF7FEFF 		bl	ADC_Battery_StartConvert
+ 140              	.LVL11:
+ 117:main.c        ****     if(ADC_Battery_IsEndConversion(ADC_Battery_WAIT_FOR_RESULT)) 
+ 141              		.loc 1 117 0
+ 142 0006 0020     		movs	r0, #0
+ 143 0008 FFF7FEFF 		bl	ADC_Battery_IsEndConversion
+ 144              	.LVL12:
+ 145 000c 90B1     		cbz	r0, .L12
+ 118:main.c        ****     {   // wait for get ADC converted value
+ 119:main.c        ****         adcresult = ADC_Battery_GetResult16();
+ 146              		.loc 1 119 0
+ 147 000e FFF7FEFF 		bl	ADC_Battery_GetResult16
+ 148              	.LVL13:
+ 149 0012 0546     		mov	r5, r0
+ 150              	.LVL14:
+ 120:main.c        ****         volts = ADC_Battery_CountsTo_Volts(adcresult)*1.5;                  // convert value to Vol
+ 151              		.loc 1 120 0
+ 152 0014 FFF7FEFF 		bl	ADC_Battery_CountsTo_Volts
+ 153              	.LVL15:
+ 154 0018 4FF07F51 		mov	r1, #1069547520
+ 155 001c FFF7FEFF 		bl	__aeabi_fmul
+ 156              	.LVL16:
+ 157 0020 0446     		mov	r4, r0
+ 158              	.LVL17:
+ 121:main.c        ****     
+ 122:main.c        ****         // If you want to print value
+ 123:main.c        ****         printf("%d %f\r\n",adcresult, volts);
+ 159              		.loc 1 123 0
+ 160 0022 FFF7FEFF 		bl	__aeabi_f2d
+ 161              	.LVL18:
+ 162 0026 0246     		mov	r2, r0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 6
+
+
+ 163 0028 0B46     		mov	r3, r1
+ 164 002a 2946     		mov	r1, r5
+ 165 002c 0348     		ldr	r0, .L14
+ 166 002e FFF7FEFF 		bl	printf
+ 167              	.LVL19:
+ 168 0032 00E0     		b	.L11
+ 169              	.LVL20:
+ 170              	.L12:
+ 115:main.c        ****     ADC_Battery_StartConvert();
+ 171              		.loc 1 115 0
+ 172 0034 0024     		movs	r4, #0
+ 173              	.LVL21:
+ 174              	.L11:
+ 124:main.c        ****         
+ 125:main.c        ****     }
+ 126:main.c        ****     return(volts);
+ 127:main.c        **** }
+ 175              		.loc 1 127 0
+ 176 0036 2046     		mov	r0, r4
+ 177 0038 38BD     		pop	{r3, r4, r5, pc}
+ 178              	.LVL22:
+ 179              	.L15:
+ 180 003a 00BF     		.align	2
+ 181              	.L14:
+ 182 003c 08000000 		.word	.LC1
+ 183              		.cfi_endproc
+ 184              	.LFE65:
+ 185              		.size	checkBat, .-checkBat
+ 186              		.section	.text._write,"ax",%progbits
+ 187              		.align	2
+ 188              		.global	_write
+ 189              		.thumb
+ 190              		.thumb_func
+ 191              		.type	_write, %function
+ 192              	_write:
+ 193              	.LFB66:
+ 128:main.c        **** //*/
+ 129:main.c        **** 
+ 130:main.c        **** 
+ 131:main.c        **** /*//ultra sonic sensor//
+ 132:main.c        **** int main()
+ 133:main.c        **** {
+ 134:main.c        ****     CyGlobalIntEnable; 
+ 135:main.c        ****     UART_1_Start();
+ 136:main.c        ****     Ultra_Start();                          // Ultra Sonic Start function
+ 137:main.c        ****     while(1) {
+ 138:main.c        ****         //If you want to print out the value  
+ 139:main.c        ****         printf("distance = %5.0f\r\n", Ultra_GetDistance());
+ 140:main.c        ****         CyDelay(1000);
+ 141:main.c        ****     }
+ 142:main.c        **** }   
+ 143:main.c        **** //*/
+ 144:main.c        **** 
+ 145:main.c        **** 
+ 146:main.c        **** /*//nunchuk//
+ 147:main.c        **** int main()
+ 148:main.c        **** {
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 7
+
+
+ 149:main.c        ****     CyGlobalIntEnable; 
+ 150:main.c        ****     UART_1_Start();
+ 151:main.c        ****   
+ 152:main.c        ****     nunchuk_start();
+ 153:main.c        ****     nunchuk_init();
+ 154:main.c        ****     
+ 155:main.c        ****     for(;;)
+ 156:main.c        ****     {    
+ 157:main.c        ****         nunchuk_read();
+ 158:main.c        ****     }
+ 159:main.c        **** }   
+ 160:main.c        **** //*/
+ 161:main.c        **** 
+ 162:main.c        **** 
+ 163:main.c        **** /*//IR receiver//
+ 164:main.c        **** int main()
+ 165:main.c        **** {
+ 166:main.c        ****     CyGlobalIntEnable; 
+ 167:main.c        ****     UART_1_Start();
+ 168:main.c        ****     
+ 169:main.c        ****     unsigned int IR_val; 
+ 170:main.c        ****     
+ 171:main.c        ****     for(;;)
+ 172:main.c        ****     {
+ 173:main.c        ****        IR_val = get_IR();
+ 174:main.c        ****        printf("%x\r\n\n",IR_val);
+ 175:main.c        ****     }    
+ 176:main.c        ****  }   
+ 177:main.c        **** //*/
+ 178:main.c        **** 
+ 179:main.c        **** 
+ 180:main.c        **** /*//Ambient light sensor//
+ 181:main.c        **** int main()
+ 182:main.c        **** {
+ 183:main.c        ****     CyGlobalIntEnable; 
+ 184:main.c        ****     UART_1_Start();
+ 185:main.c        ****     
+ 186:main.c        ****     I2C_Start();
+ 187:main.c        ****     
+ 188:main.c        ****     I2C_write(0x29,0x80,0x00);          // set to power down
+ 189:main.c        ****     I2C_write(0x29,0x80,0x03);          // set to power on
+ 190:main.c        ****     
+ 191:main.c        ****     for(;;)
+ 192:main.c        ****     {    
+ 193:main.c        ****         uint8 Data0Low,Data0High,Data1Low,Data1High;
+ 194:main.c        ****         Data0Low = I2C_read(0x29,CH0_L);
+ 195:main.c        ****         Data0High = I2C_read(0x29,CH0_H);
+ 196:main.c        ****         Data1Low = I2C_read(0x29,CH1_L);
+ 197:main.c        ****         Data1High = I2C_read(0x29,CH1_H);
+ 198:main.c        ****         
+ 199:main.c        ****         uint8 CH0, CH1;
+ 200:main.c        ****         CH0 = convert_raw(Data0Low,Data0High);      // combine Data0
+ 201:main.c        ****         CH1 = convert_raw(Data1Low,Data1High);      // combine Data1
+ 202:main.c        **** 
+ 203:main.c        ****         double Ch0 = CH0;
+ 204:main.c        ****         double Ch1 = CH1;
+ 205:main.c        ****         
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 8
+
+
+ 206:main.c        ****         double data = 0;
+ 207:main.c        ****         data = getLux(Ch0,Ch1);
+ 208:main.c        ****         
+ 209:main.c        ****         // If you want to print out data
+ 210:main.c        ****         //printf("%lf\r\n",data);    
+ 211:main.c        ****     }    
+ 212:main.c        ****  }   
+ 213:main.c        **** //*/
+ 214:main.c        **** 
+ 215:main.c        **** 
+ 216:main.c        **** /*//accelerometer//
+ 217:main.c        **** int main()
+ 218:main.c        **** {
+ 219:main.c        ****     CyGlobalIntEnable; 
+ 220:main.c        ****     UART_1_Start();
+ 221:main.c        ****   
+ 222:main.c        ****     I2C_Start();
+ 223:main.c        ****   
+ 224:main.c        ****     uint8 X_L_A, X_H_A, Y_L_A, Y_H_A, Z_L_A, Z_H_A;
+ 225:main.c        ****     int16 X_AXIS_A, Y_AXIS_A, Z_AXIS_A;
+ 226:main.c        ****     
+ 227:main.c        ****     I2C_write(ACCEL_MAG_ADDR, ACCEL_CTRL1_REG, 0x37);           // set accelerometer & magnetometer
+ 228:main.c        ****     I2C_write(ACCEL_MAG_ADDR, ACCEL_CTRL7_REG, 0x22);
+ 229:main.c        ****     
+ 230:main.c        ****     
+ 231:main.c        ****     for(;;)
+ 232:main.c        ****     {
+ 233:main.c        ****         //print out accelerometer output
+ 234:main.c        ****         X_L_A = I2C_read(ACCEL_MAG_ADDR, OUT_X_L_A);
+ 235:main.c        ****         X_H_A = I2C_read(ACCEL_MAG_ADDR, OUT_X_H_A);
+ 236:main.c        ****         X_AXIS_A = convert_raw(X_L_A, X_H_A);
+ 237:main.c        ****         
+ 238:main.c        ****         Y_L_A = I2C_read(ACCEL_MAG_ADDR, OUT_Y_L_A);
+ 239:main.c        ****         Y_H_A = I2C_read(ACCEL_MAG_ADDR, OUT_Y_H_A);
+ 240:main.c        ****         Y_AXIS_A = convert_raw(Y_L_A, Y_H_A);
+ 241:main.c        ****         
+ 242:main.c        ****         Z_L_A = I2C_read(ACCEL_MAG_ADDR, OUT_Z_L_A);
+ 243:main.c        ****         Z_H_A = I2C_read(ACCEL_MAG_ADDR, OUT_Z_H_A);
+ 244:main.c        ****         Z_AXIS_A = convert_raw(Z_L_A, Z_H_A);
+ 245:main.c        ****         
+ 246:main.c        ****         printf("ACCEL: %d %d %d %d %d %d \r\n", X_L_A, X_H_A, Y_L_A, Y_H_A, Z_L_A, Z_H_A);
+ 247:main.c        ****         value_convert_accel(X_AXIS_A, Y_AXIS_A, Z_AXIS_A);
+ 248:main.c        ****         printf("\n");
+ 249:main.c        ****         
+ 250:main.c        ****         CyDelay(50);
+ 251:main.c        ****     }
+ 252:main.c        **** }   
+ 253:main.c        **** //*/
+ 254:main.c        **** 
+ 255:main.c        **** 
+ 256:main.c        **** /*//reflectance//
+ 257:main.c        **** int main()
+ 258:main.c        **** {
+ 259:main.c        ****     struct sensors_ ref;
+ 260:main.c        ****     struct sensors_ dig;
+ 261:main.c        ****     CyGlobalIntEnable; 
+ 262:main.c        ****     UART_1_Start();
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 9
+
+
+ 263:main.c        ****   
+ 264:main.c        ****     sensor_isr_StartEx(sensor_isr_handler);
+ 265:main.c        ****     
+ 266:main.c        ****     reflectance_start();
+ 267:main.c        **** 
+ 268:main.c        ****     IR_led_Write(1);
+ 269:main.c        ****     for(;;)
+ 270:main.c        ****     {
+ 271:main.c        ****         reflectance_read(&ref);
+ 272:main.c        ****         printf("%d %d %d %d \r\n", ref.l3, ref.l1, ref.r1, ref.r3);       //print out each period o
+ 273:main.c        ****         reflectance_digital(&dig);      //print out 0 or 1 according to results of reflectance peri
+ 274:main.c        ****         printf("%d %d %d %d \r\n", dig.l3, dig.l1, dig.r1, dig.r3);        //print out 0 or 1 accor
+ 275:main.c        ****         
+ 276:main.c        ****         CyDelay(500);
+ 277:main.c        ****     }
+ 278:main.c        **** }   
+ 279:main.c        **** //*/
+ 280:main.c        **** 
+ 281:main.c        ****  /* //motor//
+ 282:main.c        **** int main()
+ 283:main.c        **** {
+ 284:main.c        ****     CyGlobalIntEnable; 
+ 285:main.c        ****     UART_1_Start();
+ 286:main.c        **** 
+ 287:main.c        ****     motor_start();              // motor start
+ 288:main.c        **** 
+ 289:main.c        ****     motor_forward(100,2000);     // moving forward
+ 290:main.c        ****     motor_turn(200,50,2000);     // turn
+ 291:main.c        ****     motor_turn(50,200,2000);     // turn
+ 292:main.c        ****     motor_backward(100,2000);    // movinb backward
+ 293:main.c        ****        
+ 294:main.c        ****     motor_stop();               // motor stop
+ 295:main.c        ****     
+ 296:main.c        ****     for(;;)
+ 297:main.c        ****     {
+ 298:main.c        **** 
+ 299:main.c        ****     }
+ 300:main.c        **** }
+ 301:main.c        **** //*/
+ 302:main.c        ****     
+ 303:main.c        **** 
+ 304:main.c        **** /*//gyroscope//
+ 305:main.c        **** int main()
+ 306:main.c        **** {
+ 307:main.c        ****     CyGlobalIntEnable; 
+ 308:main.c        ****     UART_1_Start();
+ 309:main.c        ****   
+ 310:main.c        ****     I2C_Start();
+ 311:main.c        ****   
+ 312:main.c        ****     uint8 X_L_G, X_H_G, Y_L_G, Y_H_G, Z_L_G, Z_H_G;
+ 313:main.c        ****     int16 X_AXIS_G, Y_AXIS_G, Z_AXIS_G;
+ 314:main.c        ****     
+ 315:main.c        ****     I2C_write(GYRO_ADDR, GYRO_CTRL1_REG, 0x0F);             // set gyroscope into active mode
+ 316:main.c        ****     I2C_write(GYRO_ADDR, GYRO_CTRL4_REG, 0x30);             // set full scale selection to 2000dps 
+ 317:main.c        ****     
+ 318:main.c        ****     for(;;)
+ 319:main.c        ****     {
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 10
+
+
+ 320:main.c        ****         //print out gyroscope output
+ 321:main.c        ****         X_L_G = I2C_read(GYRO_ADDR, OUT_X_AXIS_L);
+ 322:main.c        ****         X_H_G = I2C_read(GYRO_ADDR, OUT_X_AXIS_H);
+ 323:main.c        ****         X_AXIS_G = convert_raw(X_H_G, X_L_G);
+ 324:main.c        ****         
+ 325:main.c        ****         
+ 326:main.c        ****         Y_L_G = I2C_read(GYRO_ADDR, OUT_Y_AXIS_L);
+ 327:main.c        ****         Y_H_G = I2C_read(GYRO_ADDR, OUT_Y_AXIS_H);
+ 328:main.c        ****         Y_AXIS_G = convert_raw(Y_H_G, Y_L_G);
+ 329:main.c        ****         
+ 330:main.c        ****         
+ 331:main.c        ****         Z_L_G = I2C_read(GYRO_ADDR, OUT_Z_AXIS_L);
+ 332:main.c        ****         Z_H_G = I2C_read(GYRO_ADDR, OUT_Z_AXIS_H);
+ 333:main.c        ****         Z_AXIS_G = convert_raw(Z_H_G, Z_L_G);
+ 334:main.c        ****      
+ 335:main.c        ****         // If you want to print value
+ 336:main.c        ****         printf("%d %d %d \r\n", X_AXIS_G, Y_AXIS_G, Z_AXIS_G);
+ 337:main.c        ****         CyDelay(50);
+ 338:main.c        ****     }
+ 339:main.c        **** }   
+ 340:main.c        **** //*/
+ 341:main.c        **** 
+ 342:main.c        **** 
+ 343:main.c        **** /*//magnetometer//
+ 344:main.c        **** int main()
+ 345:main.c        **** {
+ 346:main.c        ****     CyGlobalIntEnable; 
+ 347:main.c        ****     UART_1_Start();
+ 348:main.c        ****   
+ 349:main.c        ****     I2C_Start();
+ 350:main.c        ****    
+ 351:main.c        ****     uint8 X_L_M, X_H_M, Y_L_M, Y_H_M, Z_L_M, Z_H_M;
+ 352:main.c        ****     int16 X_AXIS, Y_AXIS, Z_AXIS;
+ 353:main.c        ****     
+ 354:main.c        ****     I2C_write(GYRO_ADDR, GYRO_CTRL1_REG, 0x0F);             // set gyroscope into active mode
+ 355:main.c        ****     I2C_write(GYRO_ADDR, GYRO_CTRL4_REG, 0x30);             // set full scale selection to 2000dps
+ 356:main.c        ****     I2C_write(ACCEL_MAG_ADDR, ACCEL_CTRL1_REG, 0x37);           // set accelerometer & magnetometer
+ 357:main.c        ****     I2C_write(ACCEL_MAG_ADDR, ACCEL_CTRL7_REG, 0x22);
+ 358:main.c        ****     
+ 359:main.c        ****     
+ 360:main.c        ****     for(;;)
+ 361:main.c        ****     {
+ 362:main.c        ****         X_L_M = I2C_read(ACCEL_MAG_ADDR, OUT_X_L_M);
+ 363:main.c        ****         X_H_M = I2C_read(ACCEL_MAG_ADDR, OUT_X_H_M);
+ 364:main.c        ****         X_AXIS = convert_raw(X_L_M, X_H_M);
+ 365:main.c        ****         
+ 366:main.c        ****         Y_L_M = I2C_read(ACCEL_MAG_ADDR, OUT_Y_L_M);
+ 367:main.c        ****         Y_H_M = I2C_read(ACCEL_MAG_ADDR, OUT_Y_H_M);
+ 368:main.c        ****         Y_AXIS = convert_raw(Y_L_M, Y_H_M);
+ 369:main.c        ****         
+ 370:main.c        ****         Z_L_M = I2C_read(ACCEL_MAG_ADDR, OUT_Z_L_M);
+ 371:main.c        ****         Z_H_M = I2C_read(ACCEL_MAG_ADDR, OUT_Z_H_M);
+ 372:main.c        ****         Z_AXIS = convert_raw(Z_L_M, Z_H_M);
+ 373:main.c        ****         
+ 374:main.c        ****         heading(X_AXIS, Y_AXIS);
+ 375:main.c        ****         printf("MAGNET: %d %d %d %d %d %d \r\n", X_L_M, X_H_M, Y_L_M, Y_H_M, Z_L_M, Z_H_M);
+ 376:main.c        ****         printf("%d %d %d \r\n", X_AXIS,Y_AXIS, Z_AXIS);
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 11
+
+
+ 377:main.c        ****         CyDelay(50);      
+ 378:main.c        ****     }
+ 379:main.c        **** }   
+ 380:main.c        **** //*/
+ 381:main.c        **** 
+ 382:main.c        **** 
+ 383:main.c        **** #if 0
+ 384:main.c        **** int rread(void)
+ 385:main.c        **** {
+ 386:main.c        ****     SC0_SetDriveMode(PIN_DM_STRONG);
+ 387:main.c        ****     SC0_Write(1);
+ 388:main.c        ****     CyDelayUs(10);
+ 389:main.c        ****     SC0_SetDriveMode(PIN_DM_DIG_HIZ);
+ 390:main.c        ****     Timer_1_Start();
+ 391:main.c        ****     uint16_t start = Timer_1_ReadCounter();
+ 392:main.c        ****     uint16_t end = 0;
+ 393:main.c        ****     while(!(Timer_1_ReadStatusRegister() & Timer_1_STATUS_TC)) {
+ 394:main.c        ****         if(SC0_Read() == 0 && end == 0) {
+ 395:main.c        ****             end = Timer_1_ReadCounter();
+ 396:main.c        ****         }
+ 397:main.c        ****     }
+ 398:main.c        ****     Timer_1_Stop();
+ 399:main.c        ****     
+ 400:main.c        ****     return (start - end);
+ 401:main.c        **** }
+ 402:main.c        **** #endif
+ 403:main.c        **** 
+ 404:main.c        **** /* Don't remove the functions below */
+ 405:main.c        **** int _write(int file, char *ptr, int len)
+ 406:main.c        **** {
+ 194              		.loc 1 406 0
+ 195              		.cfi_startproc
+ 196              		@ args = 0, pretend = 0, frame = 0
+ 197              		@ frame_needed = 0, uses_anonymous_args = 0
+ 198              	.LVL23:
+ 199 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 200              		.cfi_def_cfa_offset 24
+ 201              		.cfi_offset 3, -24
+ 202              		.cfi_offset 4, -20
+ 203              		.cfi_offset 5, -16
+ 204              		.cfi_offset 6, -12
+ 205              		.cfi_offset 7, -8
+ 206              		.cfi_offset 14, -4
+ 207 0002 0C46     		mov	r4, r1
+ 208 0004 1746     		mov	r7, r2
+ 209              	.LVL24:
+ 407:main.c        ****     (void)file; /* Parameter is not used, suppress unused argument warning */
+ 408:main.c        **** 	int n;
+ 409:main.c        **** 	for(n = 0; n < len; n++) {
+ 210              		.loc 1 409 0
+ 211 0006 0025     		movs	r5, #0
+ 212 0008 0BE0     		b	.L17
+ 213              	.LVL25:
+ 214              	.L19:
+ 410:main.c        ****         if(*ptr == '\n') UART_1_PutChar('\r');
+ 215              		.loc 1 410 0
+ 216 000a 2378     		ldrb	r3, [r4]	@ zero_extendqisi2
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 12
+
+
+ 217 000c 0A2B     		cmp	r3, #10
+ 218 000e 02D1     		bne	.L18
+ 219              		.loc 1 410 0 is_stmt 0 discriminator 1
+ 220 0010 0D20     		movs	r0, #13
+ 221 0012 FFF7FEFF 		bl	UART_1_PutChar
+ 222              	.LVL26:
+ 223              	.L18:
+ 411:main.c        **** 		UART_1_PutChar(*ptr++);
+ 224              		.loc 1 411 0 is_stmt 1 discriminator 2
+ 225 0016 661C     		adds	r6, r4, #1
+ 226              	.LVL27:
+ 227 0018 2078     		ldrb	r0, [r4]	@ zero_extendqisi2
+ 228 001a FFF7FEFF 		bl	UART_1_PutChar
+ 229              	.LVL28:
+ 409:main.c        ****         if(*ptr == '\n') UART_1_PutChar('\r');
+ 230              		.loc 1 409 0 discriminator 2
+ 231 001e 0135     		adds	r5, r5, #1
+ 232              	.LVL29:
+ 233              		.loc 1 411 0 discriminator 2
+ 234 0020 3446     		mov	r4, r6
+ 235              	.LVL30:
+ 236              	.L17:
+ 409:main.c        ****         if(*ptr == '\n') UART_1_PutChar('\r');
+ 237              		.loc 1 409 0 discriminator 1
+ 238 0022 BD42     		cmp	r5, r7
+ 239 0024 F1DB     		blt	.L19
+ 412:main.c        **** 	}
+ 413:main.c        **** 	return len;
+ 414:main.c        **** }
+ 240              		.loc 1 414 0
+ 241 0026 3846     		mov	r0, r7
+ 242 0028 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 243              		.cfi_endproc
+ 244              	.LFE66:
+ 245              		.size	_write, .-_write
+ 246 002a 00BF     		.section	.text._read,"ax",%progbits
+ 247              		.align	2
+ 248              		.global	_read
+ 249              		.thumb
+ 250              		.thumb_func
+ 251              		.type	_read, %function
+ 252              	_read:
+ 253              	.LFB67:
+ 415:main.c        **** 
+ 416:main.c        **** int _read (int file, char *ptr, int count)
+ 417:main.c        **** {
+ 254              		.loc 1 417 0
+ 255              		.cfi_startproc
+ 256              		@ args = 0, pretend = 0, frame = 0
+ 257              		@ frame_needed = 0, uses_anonymous_args = 0
+ 258              	.LVL31:
+ 259 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 260              		.cfi_def_cfa_offset 24
+ 261              		.cfi_offset 3, -24
+ 262              		.cfi_offset 4, -20
+ 263              		.cfi_offset 5, -16
+ 264              		.cfi_offset 6, -12
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 13
+
+
+ 265              		.cfi_offset 7, -8
+ 266              		.cfi_offset 14, -4
+ 267 0002 0F46     		mov	r7, r1
+ 268 0004 1446     		mov	r4, r2
+ 269              	.LVL32:
+ 418:main.c        ****     int chs = 0;
+ 270              		.loc 1 418 0
+ 271 0006 0026     		movs	r6, #0
+ 419:main.c        ****     char ch;
+ 420:main.c        ****  
+ 421:main.c        ****     (void)file; /* Parameter is not used, suppress unused argument warning */
+ 422:main.c        ****     while(count > 0) {
+ 272              		.loc 1 422 0
+ 273 0008 12E0     		b	.L23
+ 274              	.LVL33:
+ 275              	.L26:
+ 423:main.c        ****         ch = UART_1_GetChar();
+ 276              		.loc 1 423 0
+ 277 000a FFF7FEFF 		bl	UART_1_GetChar
+ 278              	.LVL34:
+ 424:main.c        ****         if(ch != 0) {
+ 279              		.loc 1 424 0
+ 280 000e 0546     		mov	r5, r0
+ 281 0010 70B1     		cbz	r0, .L23
+ 425:main.c        ****             UART_1_PutChar(ch);
+ 282              		.loc 1 425 0
+ 283 0012 FFF7FEFF 		bl	UART_1_PutChar
+ 284              	.LVL35:
+ 426:main.c        ****             chs++;
+ 285              		.loc 1 426 0
+ 286 0016 0136     		adds	r6, r6, #1
+ 287              	.LVL36:
+ 427:main.c        ****             if(ch == '\r') {
+ 288              		.loc 1 427 0
+ 289 0018 0D2D     		cmp	r5, #13
+ 290 001a 03D1     		bne	.L24
+ 291              	.LVL37:
+ 428:main.c        ****                 ch = '\n';
+ 429:main.c        ****                 UART_1_PutChar(ch);
+ 292              		.loc 1 429 0
+ 293 001c 0A20     		movs	r0, #10
+ 294 001e FFF7FEFF 		bl	UART_1_PutChar
+ 295              	.LVL38:
+ 428:main.c        ****                 ch = '\n';
+ 296              		.loc 1 428 0
+ 297 0022 0A25     		movs	r5, #10
+ 298              	.LVL39:
+ 299              	.L24:
+ 430:main.c        ****             }
+ 431:main.c        ****             *ptr++ = ch;
+ 300              		.loc 1 431 0
+ 301 0024 7B1C     		adds	r3, r7, #1
+ 302              	.LVL40:
+ 303 0026 3D70     		strb	r5, [r7]
+ 432:main.c        ****             count--;
+ 304              		.loc 1 432 0
+ 305 0028 013C     		subs	r4, r4, #1
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 14
+
+
+ 306              	.LVL41:
+ 433:main.c        ****             if(ch == '\n') break;
+ 307              		.loc 1 433 0
+ 308 002a 0A2D     		cmp	r5, #10
+ 309 002c 02D0     		beq	.L25
+ 431:main.c        ****             count--;
+ 310              		.loc 1 431 0
+ 311 002e 1F46     		mov	r7, r3
+ 312              	.LVL42:
+ 313              	.L23:
+ 422:main.c        ****         ch = UART_1_GetChar();
+ 314              		.loc 1 422 0
+ 315 0030 002C     		cmp	r4, #0
+ 316 0032 EADC     		bgt	.L26
+ 317              	.LVL43:
+ 318              	.L25:
+ 434:main.c        ****         }
+ 435:main.c        ****     }
+ 436:main.c        ****     return chs;
+ 437:main.c        **** }
+ 319              		.loc 1 437 0
+ 320 0034 3046     		mov	r0, r6
+ 321 0036 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 322              		.cfi_endproc
+ 323              	.LFE67:
+ 324              		.size	_read, .-_read
+ 325              		.comm	threshold,8,4
+ 326              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 327              		.align	2
+ 328              	.LC0:
+ 329 0000 0A426F6F 		.ascii	"\012Boot\000"
+ 329      7400
+ 330 0006 0000     		.space	2
+ 331              	.LC1:
+ 332 0008 25642025 		.ascii	"%d %f\015\012\000"
+ 332      660D0A00 
+ 333              		.text
+ 334              	.Letext0:
+ 335              		.file 2 "d:\\koulu\\laitteet\\psoc\\psoc creator\\4.1\\psoc creator\\import\\gnu\\arm\\5.4.1\\arm-
+ 336              		.file 3 "d:\\koulu\\laitteet\\psoc\\psoc creator\\4.1\\psoc creator\\import\\gnu\\arm\\5.4.1\\arm-
+ 337              		.file 4 "Generated_Source\\PSoC5/cytypes.h"
+ 338              		.file 5 ".\\ZumoLibrary/Reflectance.h"
+ 339              		.file 6 "Generated_Source\\PSoC5/core_cm3.h"
+ 340              		.file 7 "Generated_Source\\PSoC5/UART_1.h"
+ 341              		.file 8 "Generated_Source\\PSoC5/ADC_Battery.h"
+ 342              		.file 9 "Generated_Source\\PSoC5/BatteryLed.h"
+ 343              		.file 10 ".\\ZumoLibrary/Motor.h"
+ 344              		.file 11 "Generated_Source\\PSoC5/SW1.h"
+ 345              		.file 12 "Generated_Source\\PSoC5/CyLib.h"
+ 346              		.file 13 "d:\\koulu\\laitteet\\psoc\\psoc creator\\4.1\\psoc creator\\import\\gnu\\arm\\5.4.1\\arm
+ 347              		.file 14 "<built-in>"
+ 348              		.section	.debug_info,"",%progbits
+ 349              	.Ldebug_info0:
+ 350 0000 79040000 		.4byte	0x479
+ 351 0004 0400     		.2byte	0x4
+ 352 0006 00000000 		.4byte	.Ldebug_abbrev0
+ 353 000a 04       		.byte	0x4
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 15
+
+
+ 354 000b 01       		.uleb128 0x1
+ 355 000c 7D000000 		.4byte	.LASF43
+ 356 0010 0C       		.byte	0xc
+ 357 0011 36020000 		.4byte	.LASF44
+ 358 0015 98020000 		.4byte	.LASF45
+ 359 0019 00000000 		.4byte	.Ldebug_ranges0+0
+ 360 001d 00000000 		.4byte	0
+ 361 0021 00000000 		.4byte	.Ldebug_line0
+ 362 0025 02       		.uleb128 0x2
+ 363 0026 01       		.byte	0x1
+ 364 0027 06       		.byte	0x6
+ 365 0028 8C020000 		.4byte	.LASF0
+ 366 002c 02       		.uleb128 0x2
+ 367 002d 01       		.byte	0x1
+ 368 002e 08       		.byte	0x8
+ 369 002f 6F000000 		.4byte	.LASF1
+ 370 0033 02       		.uleb128 0x2
+ 371 0034 02       		.byte	0x2
+ 372 0035 05       		.byte	0x5
+ 373 0036 59020000 		.4byte	.LASF2
+ 374 003a 03       		.uleb128 0x3
+ 375 003b 3F010000 		.4byte	.LASF4
+ 376 003f 02       		.byte	0x2
+ 377 0040 2B       		.byte	0x2b
+ 378 0041 45000000 		.4byte	0x45
+ 379 0045 02       		.uleb128 0x2
+ 380 0046 02       		.byte	0x2
+ 381 0047 07       		.byte	0x7
+ 382 0048 2F000000 		.4byte	.LASF3
+ 383 004c 03       		.uleb128 0x3
+ 384 004d 09000000 		.4byte	.LASF5
+ 385 0051 02       		.byte	0x2
+ 386 0052 3F       		.byte	0x3f
+ 387 0053 57000000 		.4byte	0x57
+ 388 0057 02       		.uleb128 0x2
+ 389 0058 04       		.byte	0x4
+ 390 0059 05       		.byte	0x5
+ 391 005a 7E020000 		.4byte	.LASF6
+ 392 005e 02       		.uleb128 0x2
+ 393 005f 04       		.byte	0x4
+ 394 0060 07       		.byte	0x7
+ 395 0061 20010000 		.4byte	.LASF7
+ 396 0065 02       		.uleb128 0x2
+ 397 0066 08       		.byte	0x8
+ 398 0067 05       		.byte	0x5
+ 399 0068 17020000 		.4byte	.LASF8
+ 400 006c 02       		.uleb128 0x2
+ 401 006d 08       		.byte	0x8
+ 402 006e 07       		.byte	0x7
+ 403 006f 8C010000 		.4byte	.LASF9
+ 404 0073 04       		.uleb128 0x4
+ 405 0074 04       		.byte	0x4
+ 406 0075 05       		.byte	0x5
+ 407 0076 696E7400 		.ascii	"int\000"
+ 408 007a 02       		.uleb128 0x2
+ 409 007b 04       		.byte	0x4
+ 410 007c 07       		.byte	0x7
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 16
+
+
+ 411 007d 67010000 		.4byte	.LASF10
+ 412 0081 03       		.uleb128 0x3
+ 413 0082 6C020000 		.4byte	.LASF11
+ 414 0086 03       		.byte	0x3
+ 415 0087 24       		.byte	0x24
+ 416 0088 3A000000 		.4byte	0x3a
+ 417 008c 03       		.uleb128 0x3
+ 418 008d 56000000 		.4byte	.LASF12
+ 419 0091 03       		.byte	0x3
+ 420 0092 2C       		.byte	0x2c
+ 421 0093 4C000000 		.4byte	0x4c
+ 422 0097 05       		.uleb128 0x5
+ 423 0098 1A010000 		.4byte	.LASF13
+ 424 009c 04       		.byte	0x4
+ 425 009d 9601     		.2byte	0x196
+ 426 009f 33000000 		.4byte	0x33
+ 427 00a3 02       		.uleb128 0x2
+ 428 00a4 04       		.byte	0x4
+ 429 00a5 04       		.byte	0x4
+ 430 00a6 64000000 		.4byte	.LASF14
+ 431 00aa 02       		.uleb128 0x2
+ 432 00ab 08       		.byte	0x8
+ 433 00ac 04       		.byte	0x4
+ 434 00ad 4A010000 		.4byte	.LASF15
+ 435 00b1 02       		.uleb128 0x2
+ 436 00b2 01       		.byte	0x1
+ 437 00b3 08       		.byte	0x8
+ 438 00b4 3D020000 		.4byte	.LASF16
+ 439 00b8 02       		.uleb128 0x2
+ 440 00b9 08       		.byte	0x8
+ 441 00ba 04       		.byte	0x4
+ 442 00bb FB010000 		.4byte	.LASF17
+ 443 00bf 02       		.uleb128 0x2
+ 444 00c0 04       		.byte	0x4
+ 445 00c1 07       		.byte	0x7
+ 446 00c2 0E020000 		.4byte	.LASF18
+ 447 00c6 06       		.uleb128 0x6
+ 448 00c7 04       		.byte	0x4
+ 449 00c8 B1000000 		.4byte	0xb1
+ 450 00cc 07       		.uleb128 0x7
+ 451 00cd 00000000 		.4byte	.LASF46
+ 452 00d1 08       		.byte	0x8
+ 453 00d2 05       		.byte	0x5
+ 454 00d3 11       		.byte	0x11
+ 455 00d4 05010000 		.4byte	0x105
+ 456 00d8 08       		.uleb128 0x8
+ 457 00d9 6C3300   		.ascii	"l3\000"
+ 458 00dc 05       		.byte	0x5
+ 459 00dd 12       		.byte	0x12
+ 460 00de 81000000 		.4byte	0x81
+ 461 00e2 00       		.byte	0
+ 462 00e3 08       		.uleb128 0x8
+ 463 00e4 6C3100   		.ascii	"l1\000"
+ 464 00e7 05       		.byte	0x5
+ 465 00e8 14       		.byte	0x14
+ 466 00e9 81000000 		.4byte	0x81
+ 467 00ed 02       		.byte	0x2
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 17
+
+
+ 468 00ee 08       		.uleb128 0x8
+ 469 00ef 723100   		.ascii	"r1\000"
+ 470 00f2 05       		.byte	0x5
+ 471 00f3 15       		.byte	0x15
+ 472 00f4 81000000 		.4byte	0x81
+ 473 00f8 04       		.byte	0x4
+ 474 00f9 08       		.uleb128 0x8
+ 475 00fa 723300   		.ascii	"r3\000"
+ 476 00fd 05       		.byte	0x5
+ 477 00fe 17       		.byte	0x17
+ 478 00ff 81000000 		.4byte	0x81
+ 479 0103 06       		.byte	0x6
+ 480 0104 00       		.byte	0
+ 481 0105 09       		.uleb128 0x9
+ 482 0106 51010000 		.4byte	.LASF21
+ 483 010a 01       		.byte	0x1
+ 484 010b 3C       		.byte	0x3c
+ 485 010c 73000000 		.4byte	0x73
+ 486 0110 00000000 		.4byte	.LFB64
+ 487 0114 74000000 		.4byte	.LFE64-.LFB64
+ 488 0118 01       		.uleb128 0x1
+ 489 0119 9C       		.byte	0x9c
+ 490 011a 11020000 		.4byte	0x211
+ 491 011e 0A       		.uleb128 0xa
+ 492 011f 64696700 		.ascii	"dig\000"
+ 493 0123 01       		.byte	0x1
+ 494 0124 3E       		.byte	0x3e
+ 495 0125 CC000000 		.4byte	0xcc
+ 496 0129 02       		.uleb128 0x2
+ 497 012a 91       		.byte	0x91
+ 498 012b 70       		.sleb128 -16
+ 499 012c 0B       		.uleb128 0xb
+ 500 012d 42020000 		.4byte	.LASF19
+ 501 0131 01       		.byte	0x1
+ 502 0132 46       		.byte	0x46
+ 503 0133 97000000 		.4byte	0x97
+ 504 0137 00       		.byte	0
+ 505 0138 0C       		.uleb128 0xc
+ 506 0139 F5010000 		.4byte	.LASF20
+ 507 013d 01       		.byte	0x1
+ 508 013e 47       		.byte	0x47
+ 509 013f A3000000 		.4byte	0xa3
+ 510 0143 04       		.byte	0x4
+ 511 0144 00000000 		.4byte	0
+ 512 0148 0D       		.uleb128 0xd
+ 513 0149 0A000000 		.4byte	.LVL0
+ 514 014d C8030000 		.4byte	0x3c8
+ 515 0151 0D       		.uleb128 0xd
+ 516 0152 0E000000 		.4byte	.LVL1
+ 517 0156 D3030000 		.4byte	0x3d3
+ 518 015a 0E       		.uleb128 0xe
+ 519 015b 14000000 		.4byte	.LVL2
+ 520 015f DE030000 		.4byte	0x3de
+ 521 0163 71010000 		.4byte	0x171
+ 522 0167 0F       		.uleb128 0xf
+ 523 0168 01       		.uleb128 0x1
+ 524 0169 50       		.byte	0x50
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 18
+
+
+ 525 016a 05       		.uleb128 0x5
+ 526 016b 03       		.byte	0x3
+ 527 016c 00000000 		.4byte	.LC0
+ 528 0170 00       		.byte	0
+ 529 0171 0E       		.uleb128 0xe
+ 530 0172 1A000000 		.4byte	.LVL3
+ 531 0176 ED030000 		.4byte	0x3ed
+ 532 017a 84010000 		.4byte	0x184
+ 533 017e 0F       		.uleb128 0xf
+ 534 017f 01       		.uleb128 0x1
+ 535 0180 50       		.byte	0x50
+ 536 0181 01       		.uleb128 0x1
+ 537 0182 30       		.byte	0x30
+ 538 0183 00       		.byte	0
+ 539 0184 0D       		.uleb128 0xd
+ 540 0185 1E000000 		.4byte	.LVL4
+ 541 0189 F8030000 		.4byte	0x3f8
+ 542 018d 0E       		.uleb128 0xe
+ 543 018e 24000000 		.4byte	.LVL5
+ 544 0192 03040000 		.4byte	0x403
+ 545 0196 A1010000 		.4byte	0x1a1
+ 546 019a 0F       		.uleb128 0xf
+ 547 019b 01       		.uleb128 0x1
+ 548 019c 50       		.byte	0x50
+ 549 019d 02       		.uleb128 0x2
+ 550 019e 91       		.byte	0x91
+ 551 019f 70       		.sleb128 -16
+ 552 01a0 00       		.byte	0
+ 553 01a1 0D       		.uleb128 0xd
+ 554 01a2 28000000 		.4byte	.LVL6
+ 555 01a6 0E040000 		.4byte	0x40e
+ 556 01aa 0E       		.uleb128 0xe
+ 557 01ab 34000000 		.4byte	.LVL7
+ 558 01af 19040000 		.4byte	0x419
+ 559 01b3 BF010000 		.4byte	0x1bf
+ 560 01b7 0F       		.uleb128 0xf
+ 561 01b8 01       		.uleb128 0x1
+ 562 01b9 50       		.byte	0x50
+ 563 01ba 03       		.uleb128 0x3
+ 564 01bb 0A       		.byte	0xa
+ 565 01bc E803     		.2byte	0x3e8
+ 566 01be 00       		.byte	0
+ 567 01bf 0E       		.uleb128 0xe
+ 568 01c0 5C000000 		.4byte	.LVL8
+ 569 01c4 24040000 		.4byte	0x424
+ 570 01c8 EA010000 		.4byte	0x1ea
+ 571 01cc 0F       		.uleb128 0xf
+ 572 01cd 01       		.uleb128 0x1
+ 573 01ce 50       		.byte	0x50
+ 574 01cf 01       		.uleb128 0x1
+ 575 01d0 31       		.byte	0x31
+ 576 01d1 0F       		.uleb128 0xf
+ 577 01d2 01       		.uleb128 0x1
+ 578 01d3 51       		.byte	0x51
+ 579 01d4 01       		.uleb128 0x1
+ 580 01d5 30       		.byte	0x30
+ 581 01d6 0F       		.uleb128 0xf
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 19
+
+
+ 582 01d7 01       		.uleb128 0x1
+ 583 01d8 52       		.byte	0x52
+ 584 01d9 02       		.uleb128 0x2
+ 585 01da 09       		.byte	0x9
+ 586 01db FF       		.byte	0xff
+ 587 01dc 0F       		.uleb128 0xf
+ 588 01dd 01       		.uleb128 0x1
+ 589 01de 53       		.byte	0x53
+ 590 01df 02       		.uleb128 0x2
+ 591 01e0 09       		.byte	0x9
+ 592 01e1 FF       		.byte	0xff
+ 593 01e2 0F       		.uleb128 0xf
+ 594 01e3 02       		.uleb128 0x2
+ 595 01e4 7D       		.byte	0x7d
+ 596 01e5 00       		.sleb128 0
+ 597 01e6 02       		.uleb128 0x2
+ 598 01e7 08       		.byte	0x8
+ 599 01e8 64       		.byte	0x64
+ 600 01e9 00       		.byte	0
+ 601 01ea 10       		.uleb128 0x10
+ 602 01eb 6E000000 		.4byte	.LVL9
+ 603 01ef 24040000 		.4byte	0x424
+ 604 01f3 0F       		.uleb128 0xf
+ 605 01f4 01       		.uleb128 0x1
+ 606 01f5 50       		.byte	0x50
+ 607 01f6 01       		.uleb128 0x1
+ 608 01f7 30       		.byte	0x30
+ 609 01f8 0F       		.uleb128 0xf
+ 610 01f9 01       		.uleb128 0x1
+ 611 01fa 51       		.byte	0x51
+ 612 01fb 01       		.uleb128 0x1
+ 613 01fc 30       		.byte	0x30
+ 614 01fd 0F       		.uleb128 0xf
+ 615 01fe 01       		.uleb128 0x1
+ 616 01ff 52       		.byte	0x52
+ 617 0200 02       		.uleb128 0x2
+ 618 0201 09       		.byte	0x9
+ 619 0202 FF       		.byte	0xff
+ 620 0203 0F       		.uleb128 0xf
+ 621 0204 01       		.uleb128 0x1
+ 622 0205 53       		.byte	0x53
+ 623 0206 02       		.uleb128 0x2
+ 624 0207 09       		.byte	0x9
+ 625 0208 96       		.byte	0x96
+ 626 0209 0F       		.uleb128 0xf
+ 627 020a 02       		.uleb128 0x2
+ 628 020b 7D       		.byte	0x7d
+ 629 020c 00       		.sleb128 0
+ 630 020d 01       		.uleb128 0x1
+ 631 020e 31       		.byte	0x31
+ 632 020f 00       		.byte	0
+ 633 0210 00       		.byte	0
+ 634 0211 11       		.uleb128 0x11
+ 635 0212 63020000 		.4byte	.LASF47
+ 636 0216 01       		.byte	0x1
+ 637 0217 70       		.byte	0x70
+ 638 0218 A3000000 		.4byte	0xa3
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 20
+
+
+ 639 021c 00000000 		.4byte	.LFB65
+ 640 0220 40000000 		.4byte	.LFE65-.LFB65
+ 641 0224 01       		.uleb128 0x1
+ 642 0225 9C       		.byte	0x9c
+ 643 0226 9B020000 		.4byte	0x29b
+ 644 022a 12       		.uleb128 0x12
+ 645 022b 42020000 		.4byte	.LASF19
+ 646 022f 01       		.byte	0x1
+ 647 0230 72       		.byte	0x72
+ 648 0231 97000000 		.4byte	0x97
+ 649 0235 00000000 		.4byte	.LLST0
+ 650 0239 12       		.uleb128 0x12
+ 651 023a F5010000 		.4byte	.LASF20
+ 652 023e 01       		.byte	0x1
+ 653 023f 73       		.byte	0x73
+ 654 0240 A3000000 		.4byte	0xa3
+ 655 0244 2B000000 		.4byte	.LLST1
+ 656 0248 0D       		.uleb128 0xd
+ 657 0249 06000000 		.4byte	.LVL11
+ 658 024d 2F040000 		.4byte	0x42f
+ 659 0251 0E       		.uleb128 0xe
+ 660 0252 0C000000 		.4byte	.LVL12
+ 661 0256 3A040000 		.4byte	0x43a
+ 662 025a 64020000 		.4byte	0x264
+ 663 025e 0F       		.uleb128 0xf
+ 664 025f 01       		.uleb128 0x1
+ 665 0260 50       		.byte	0x50
+ 666 0261 01       		.uleb128 0x1
+ 667 0262 30       		.byte	0x30
+ 668 0263 00       		.byte	0
+ 669 0264 0D       		.uleb128 0xd
+ 670 0265 12000000 		.4byte	.LVL13
+ 671 0269 45040000 		.4byte	0x445
+ 672 026d 0E       		.uleb128 0xe
+ 673 026e 18000000 		.4byte	.LVL15
+ 674 0272 50040000 		.4byte	0x450
+ 675 0276 81020000 		.4byte	0x281
+ 676 027a 0F       		.uleb128 0xf
+ 677 027b 01       		.uleb128 0x1
+ 678 027c 50       		.byte	0x50
+ 679 027d 02       		.uleb128 0x2
+ 680 027e 75       		.byte	0x75
+ 681 027f 00       		.sleb128 0
+ 682 0280 00       		.byte	0
+ 683 0281 10       		.uleb128 0x10
+ 684 0282 32000000 		.4byte	.LVL19
+ 685 0286 5B040000 		.4byte	0x45b
+ 686 028a 0F       		.uleb128 0xf
+ 687 028b 01       		.uleb128 0x1
+ 688 028c 50       		.byte	0x50
+ 689 028d 05       		.uleb128 0x5
+ 690 028e 03       		.byte	0x3
+ 691 028f 08000000 		.4byte	.LC1
+ 692 0293 0F       		.uleb128 0xf
+ 693 0294 01       		.uleb128 0x1
+ 694 0295 51       		.byte	0x51
+ 695 0296 02       		.uleb128 0x2
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 21
+
+
+ 696 0297 75       		.byte	0x75
+ 697 0298 00       		.sleb128 0
+ 698 0299 00       		.byte	0
+ 699 029a 00       		.byte	0
+ 700 029b 13       		.uleb128 0x13
+ 701 029c 07020000 		.4byte	.LASF22
+ 702 02a0 01       		.byte	0x1
+ 703 02a1 9501     		.2byte	0x195
+ 704 02a3 73000000 		.4byte	0x73
+ 705 02a7 00000000 		.4byte	.LFB66
+ 706 02ab 2A000000 		.4byte	.LFE66-.LFB66
+ 707 02af 01       		.uleb128 0x1
+ 708 02b0 9C       		.byte	0x9c
+ 709 02b1 10030000 		.4byte	0x310
+ 710 02b5 14       		.uleb128 0x14
+ 711 02b6 6A000000 		.4byte	.LASF23
+ 712 02ba 01       		.byte	0x1
+ 713 02bb 9501     		.2byte	0x195
+ 714 02bd 73000000 		.4byte	0x73
+ 715 02c1 7F000000 		.4byte	.LLST2
+ 716 02c5 15       		.uleb128 0x15
+ 717 02c6 70747200 		.ascii	"ptr\000"
+ 718 02ca 01       		.byte	0x1
+ 719 02cb 9501     		.2byte	0x195
+ 720 02cd C6000000 		.4byte	0xc6
+ 721 02d1 A0000000 		.4byte	.LLST3
+ 722 02d5 15       		.uleb128 0x15
+ 723 02d6 6C656E00 		.ascii	"len\000"
+ 724 02da 01       		.byte	0x1
+ 725 02db 9501     		.2byte	0x195
+ 726 02dd 73000000 		.4byte	0x73
+ 727 02e1 D4000000 		.4byte	.LLST4
+ 728 02e5 16       		.uleb128 0x16
+ 729 02e6 6E00     		.ascii	"n\000"
+ 730 02e8 01       		.byte	0x1
+ 731 02e9 9801     		.2byte	0x198
+ 732 02eb 73000000 		.4byte	0x73
+ 733 02ef F2000000 		.4byte	.LLST5
+ 734 02f3 0E       		.uleb128 0xe
+ 735 02f4 16000000 		.4byte	.LVL26
+ 736 02f8 66040000 		.4byte	0x466
+ 737 02fc 06030000 		.4byte	0x306
+ 738 0300 0F       		.uleb128 0xf
+ 739 0301 01       		.uleb128 0x1
+ 740 0302 50       		.byte	0x50
+ 741 0303 01       		.uleb128 0x1
+ 742 0304 3D       		.byte	0x3d
+ 743 0305 00       		.byte	0
+ 744 0306 0D       		.uleb128 0xd
+ 745 0307 1E000000 		.4byte	.LVL28
+ 746 030b 66040000 		.4byte	0x466
+ 747 030f 00       		.byte	0
+ 748 0310 13       		.uleb128 0x13
+ 749 0311 5E000000 		.4byte	.LASF24
+ 750 0315 01       		.byte	0x1
+ 751 0316 A001     		.2byte	0x1a0
+ 752 0318 73000000 		.4byte	0x73
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 22
+
+
+ 753 031c 00000000 		.4byte	.LFB67
+ 754 0320 38000000 		.4byte	.LFE67-.LFB67
+ 755 0324 01       		.uleb128 0x1
+ 756 0325 9C       		.byte	0x9c
+ 757 0326 A6030000 		.4byte	0x3a6
+ 758 032a 14       		.uleb128 0x14
+ 759 032b 6A000000 		.4byte	.LASF23
+ 760 032f 01       		.byte	0x1
+ 761 0330 A001     		.2byte	0x1a0
+ 762 0332 73000000 		.4byte	0x73
+ 763 0336 11010000 		.4byte	.LLST6
+ 764 033a 15       		.uleb128 0x15
+ 765 033b 70747200 		.ascii	"ptr\000"
+ 766 033f 01       		.byte	0x1
+ 767 0340 A001     		.2byte	0x1a0
+ 768 0342 C6000000 		.4byte	0xc6
+ 769 0346 32010000 		.4byte	.LLST7
+ 770 034a 14       		.uleb128 0x14
+ 771 034b 53020000 		.4byte	.LASF25
+ 772 034f 01       		.byte	0x1
+ 773 0350 A001     		.2byte	0x1a0
+ 774 0352 73000000 		.4byte	0x73
+ 775 0356 66010000 		.4byte	.LLST8
+ 776 035a 16       		.uleb128 0x16
+ 777 035b 63687300 		.ascii	"chs\000"
+ 778 035f 01       		.byte	0x1
+ 779 0360 A201     		.2byte	0x1a2
+ 780 0362 73000000 		.4byte	0x73
+ 781 0366 84010000 		.4byte	.LLST9
+ 782 036a 16       		.uleb128 0x16
+ 783 036b 636800   		.ascii	"ch\000"
+ 784 036e 01       		.byte	0x1
+ 785 036f A301     		.2byte	0x1a3
+ 786 0371 B1000000 		.4byte	0xb1
+ 787 0375 A3010000 		.4byte	.LLST10
+ 788 0379 0D       		.uleb128 0xd
+ 789 037a 0E000000 		.4byte	.LVL34
+ 790 037e 71040000 		.4byte	0x471
+ 791 0382 0E       		.uleb128 0xe
+ 792 0383 16000000 		.4byte	.LVL35
+ 793 0387 66040000 		.4byte	0x466
+ 794 038b 96030000 		.4byte	0x396
+ 795 038f 0F       		.uleb128 0xf
+ 796 0390 01       		.uleb128 0x1
+ 797 0391 50       		.byte	0x50
+ 798 0392 02       		.uleb128 0x2
+ 799 0393 75       		.byte	0x75
+ 800 0394 00       		.sleb128 0
+ 801 0395 00       		.byte	0
+ 802 0396 10       		.uleb128 0x10
+ 803 0397 22000000 		.4byte	.LVL38
+ 804 039b 66040000 		.4byte	0x466
+ 805 039f 0F       		.uleb128 0xf
+ 806 03a0 01       		.uleb128 0x1
+ 807 03a1 50       		.byte	0x50
+ 808 03a2 01       		.uleb128 0x1
+ 809 03a3 3A       		.byte	0x3a
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 23
+
+
+ 810 03a4 00       		.byte	0
+ 811 03a5 00       		.byte	0
+ 812 03a6 17       		.uleb128 0x17
+ 813 03a7 32010000 		.4byte	.LASF26
+ 814 03ab 06       		.byte	0x6
+ 815 03ac 9606     		.2byte	0x696
+ 816 03ae B2030000 		.4byte	0x3b2
+ 817 03b2 18       		.uleb128 0x18
+ 818 03b3 8C000000 		.4byte	0x8c
+ 819 03b7 19       		.uleb128 0x19
+ 820 03b8 25000000 		.4byte	.LASF27
+ 821 03bc 05       		.byte	0x5
+ 822 03bd 1D       		.byte	0x1d
+ 823 03be CC000000 		.4byte	0xcc
+ 824 03c2 05       		.uleb128 0x5
+ 825 03c3 03       		.byte	0x3
+ 826 03c4 00000000 		.4byte	threshold
+ 827 03c8 1A       		.uleb128 0x1a
+ 828 03c9 FF020000 		.4byte	.LASF28
+ 829 03cd FF020000 		.4byte	.LASF28
+ 830 03d1 07       		.byte	0x7
+ 831 03d2 54       		.byte	0x54
+ 832 03d3 1A       		.uleb128 0x1a
+ 833 03d4 13000000 		.4byte	.LASF29
+ 834 03d8 13000000 		.4byte	.LASF29
+ 835 03dc 08       		.byte	0x8
+ 836 03dd 34       		.byte	0x34
+ 837 03de 1B       		.uleb128 0x1b
+ 838 03df 87020000 		.4byte	.LASF48
+ 839 03e3 E6010000 		.4byte	.LASF49
+ 840 03e7 0E       		.byte	0xe
+ 841 03e8 00       		.byte	0
+ 842 03e9 87020000 		.4byte	.LASF48
+ 843 03ed 1A       		.uleb128 0x1a
+ 844 03ee 25020000 		.4byte	.LASF30
+ 845 03f2 25020000 		.4byte	.LASF30
+ 846 03f6 09       		.byte	0x9
+ 847 03f7 26       		.byte	0x26
+ 848 03f8 1A       		.uleb128 0x1a
+ 849 03f9 A3010000 		.4byte	.LASF31
+ 850 03fd A3010000 		.4byte	.LASF31
+ 851 0401 0A       		.byte	0xa
+ 852 0402 0B       		.byte	0xb
+ 853 0403 1A       		.uleb128 0x1a
+ 854 0404 42000000 		.4byte	.LASF32
+ 855 0408 42000000 		.4byte	.LASF32
+ 856 040c 05       		.byte	0x5
+ 857 040d 1C       		.byte	0x1c
+ 858 040e 1A       		.uleb128 0x1a
+ 859 040f 75020000 		.4byte	.LASF33
+ 860 0413 75020000 		.4byte	.LASF33
+ 861 0417 0B       		.byte	0xb
+ 862 0418 29       		.byte	0x29
+ 863 0419 1A       		.uleb128 0x1a
+ 864 041a E8020000 		.4byte	.LASF34
+ 865 041e E8020000 		.4byte	.LASF34
+ 866 0422 0C       		.byte	0xc
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 24
+
+
+ 867 0423 76       		.byte	0x76
+ 868 0424 1A       		.uleb128 0x1a
+ 869 0425 56010000 		.4byte	.LASF35
+ 870 0429 56010000 		.4byte	.LASF35
+ 871 042d 0A       		.byte	0xa
+ 872 042e 16       		.byte	0x16
+ 873 042f 1A       		.uleb128 0x1a
+ 874 0430 CF020000 		.4byte	.LASF36
+ 875 0434 CF020000 		.4byte	.LASF36
+ 876 0438 08       		.byte	0x8
+ 877 0439 D1       		.byte	0xd1
+ 878 043a 1A       		.uleb128 0x1a
+ 879 043b CA010000 		.4byte	.LASF37
+ 880 043f CA010000 		.4byte	.LASF37
+ 881 0443 08       		.byte	0x8
+ 882 0444 39       		.byte	0x39
+ 883 0445 1A       		.uleb128 0x1a
+ 884 0446 74010000 		.4byte	.LASF38
+ 885 044a 74010000 		.4byte	.LASF38
+ 886 044e 08       		.byte	0x8
+ 887 044f 3B       		.byte	0x3b
+ 888 0450 1A       		.uleb128 0x1a
+ 889 0451 AF010000 		.4byte	.LASF39
+ 890 0455 AF010000 		.4byte	.LASF39
+ 891 0459 08       		.byte	0x8
+ 892 045a 41       		.byte	0x41
+ 893 045b 1A       		.uleb128 0x1a
+ 894 045c 4C020000 		.4byte	.LASF40
+ 895 0460 4C020000 		.4byte	.LASF40
+ 896 0464 0D       		.byte	0xd
+ 897 0465 BB       		.byte	0xbb
+ 898 0466 1A       		.uleb128 0x1a
+ 899 0467 0B010000 		.4byte	.LASF41
+ 900 046b 0B010000 		.4byte	.LASF41
+ 901 046f 07       		.byte	0x7
+ 902 0470 8A       		.byte	0x8a
+ 903 0471 1A       		.uleb128 0x1a
+ 904 0472 F0020000 		.4byte	.LASF42
+ 905 0476 F0020000 		.4byte	.LASF42
+ 906 047a 07       		.byte	0x7
+ 907 047b 71       		.byte	0x71
+ 908 047c 00       		.byte	0
+ 909              		.section	.debug_abbrev,"",%progbits
+ 910              	.Ldebug_abbrev0:
+ 911 0000 01       		.uleb128 0x1
+ 912 0001 11       		.uleb128 0x11
+ 913 0002 01       		.byte	0x1
+ 914 0003 25       		.uleb128 0x25
+ 915 0004 0E       		.uleb128 0xe
+ 916 0005 13       		.uleb128 0x13
+ 917 0006 0B       		.uleb128 0xb
+ 918 0007 03       		.uleb128 0x3
+ 919 0008 0E       		.uleb128 0xe
+ 920 0009 1B       		.uleb128 0x1b
+ 921 000a 0E       		.uleb128 0xe
+ 922 000b 55       		.uleb128 0x55
+ 923 000c 17       		.uleb128 0x17
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 25
+
+
+ 924 000d 11       		.uleb128 0x11
+ 925 000e 01       		.uleb128 0x1
+ 926 000f 10       		.uleb128 0x10
+ 927 0010 17       		.uleb128 0x17
+ 928 0011 00       		.byte	0
+ 929 0012 00       		.byte	0
+ 930 0013 02       		.uleb128 0x2
+ 931 0014 24       		.uleb128 0x24
+ 932 0015 00       		.byte	0
+ 933 0016 0B       		.uleb128 0xb
+ 934 0017 0B       		.uleb128 0xb
+ 935 0018 3E       		.uleb128 0x3e
+ 936 0019 0B       		.uleb128 0xb
+ 937 001a 03       		.uleb128 0x3
+ 938 001b 0E       		.uleb128 0xe
+ 939 001c 00       		.byte	0
+ 940 001d 00       		.byte	0
+ 941 001e 03       		.uleb128 0x3
+ 942 001f 16       		.uleb128 0x16
+ 943 0020 00       		.byte	0
+ 944 0021 03       		.uleb128 0x3
+ 945 0022 0E       		.uleb128 0xe
+ 946 0023 3A       		.uleb128 0x3a
+ 947 0024 0B       		.uleb128 0xb
+ 948 0025 3B       		.uleb128 0x3b
+ 949 0026 0B       		.uleb128 0xb
+ 950 0027 49       		.uleb128 0x49
+ 951 0028 13       		.uleb128 0x13
+ 952 0029 00       		.byte	0
+ 953 002a 00       		.byte	0
+ 954 002b 04       		.uleb128 0x4
+ 955 002c 24       		.uleb128 0x24
+ 956 002d 00       		.byte	0
+ 957 002e 0B       		.uleb128 0xb
+ 958 002f 0B       		.uleb128 0xb
+ 959 0030 3E       		.uleb128 0x3e
+ 960 0031 0B       		.uleb128 0xb
+ 961 0032 03       		.uleb128 0x3
+ 962 0033 08       		.uleb128 0x8
+ 963 0034 00       		.byte	0
+ 964 0035 00       		.byte	0
+ 965 0036 05       		.uleb128 0x5
+ 966 0037 16       		.uleb128 0x16
+ 967 0038 00       		.byte	0
+ 968 0039 03       		.uleb128 0x3
+ 969 003a 0E       		.uleb128 0xe
+ 970 003b 3A       		.uleb128 0x3a
+ 971 003c 0B       		.uleb128 0xb
+ 972 003d 3B       		.uleb128 0x3b
+ 973 003e 05       		.uleb128 0x5
+ 974 003f 49       		.uleb128 0x49
+ 975 0040 13       		.uleb128 0x13
+ 976 0041 00       		.byte	0
+ 977 0042 00       		.byte	0
+ 978 0043 06       		.uleb128 0x6
+ 979 0044 0F       		.uleb128 0xf
+ 980 0045 00       		.byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 26
+
+
+ 981 0046 0B       		.uleb128 0xb
+ 982 0047 0B       		.uleb128 0xb
+ 983 0048 49       		.uleb128 0x49
+ 984 0049 13       		.uleb128 0x13
+ 985 004a 00       		.byte	0
+ 986 004b 00       		.byte	0
+ 987 004c 07       		.uleb128 0x7
+ 988 004d 13       		.uleb128 0x13
+ 989 004e 01       		.byte	0x1
+ 990 004f 03       		.uleb128 0x3
+ 991 0050 0E       		.uleb128 0xe
+ 992 0051 0B       		.uleb128 0xb
+ 993 0052 0B       		.uleb128 0xb
+ 994 0053 3A       		.uleb128 0x3a
+ 995 0054 0B       		.uleb128 0xb
+ 996 0055 3B       		.uleb128 0x3b
+ 997 0056 0B       		.uleb128 0xb
+ 998 0057 01       		.uleb128 0x1
+ 999 0058 13       		.uleb128 0x13
+ 1000 0059 00       		.byte	0
+ 1001 005a 00       		.byte	0
+ 1002 005b 08       		.uleb128 0x8
+ 1003 005c 0D       		.uleb128 0xd
+ 1004 005d 00       		.byte	0
+ 1005 005e 03       		.uleb128 0x3
+ 1006 005f 08       		.uleb128 0x8
+ 1007 0060 3A       		.uleb128 0x3a
+ 1008 0061 0B       		.uleb128 0xb
+ 1009 0062 3B       		.uleb128 0x3b
+ 1010 0063 0B       		.uleb128 0xb
+ 1011 0064 49       		.uleb128 0x49
+ 1012 0065 13       		.uleb128 0x13
+ 1013 0066 38       		.uleb128 0x38
+ 1014 0067 0B       		.uleb128 0xb
+ 1015 0068 00       		.byte	0
+ 1016 0069 00       		.byte	0
+ 1017 006a 09       		.uleb128 0x9
+ 1018 006b 2E       		.uleb128 0x2e
+ 1019 006c 01       		.byte	0x1
+ 1020 006d 3F       		.uleb128 0x3f
+ 1021 006e 19       		.uleb128 0x19
+ 1022 006f 03       		.uleb128 0x3
+ 1023 0070 0E       		.uleb128 0xe
+ 1024 0071 3A       		.uleb128 0x3a
+ 1025 0072 0B       		.uleb128 0xb
+ 1026 0073 3B       		.uleb128 0x3b
+ 1027 0074 0B       		.uleb128 0xb
+ 1028 0075 49       		.uleb128 0x49
+ 1029 0076 13       		.uleb128 0x13
+ 1030 0077 8701     		.uleb128 0x87
+ 1031 0079 19       		.uleb128 0x19
+ 1032 007a 11       		.uleb128 0x11
+ 1033 007b 01       		.uleb128 0x1
+ 1034 007c 12       		.uleb128 0x12
+ 1035 007d 06       		.uleb128 0x6
+ 1036 007e 40       		.uleb128 0x40
+ 1037 007f 18       		.uleb128 0x18
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 27
+
+
+ 1038 0080 9742     		.uleb128 0x2117
+ 1039 0082 19       		.uleb128 0x19
+ 1040 0083 01       		.uleb128 0x1
+ 1041 0084 13       		.uleb128 0x13
+ 1042 0085 00       		.byte	0
+ 1043 0086 00       		.byte	0
+ 1044 0087 0A       		.uleb128 0xa
+ 1045 0088 34       		.uleb128 0x34
+ 1046 0089 00       		.byte	0
+ 1047 008a 03       		.uleb128 0x3
+ 1048 008b 08       		.uleb128 0x8
+ 1049 008c 3A       		.uleb128 0x3a
+ 1050 008d 0B       		.uleb128 0xb
+ 1051 008e 3B       		.uleb128 0x3b
+ 1052 008f 0B       		.uleb128 0xb
+ 1053 0090 49       		.uleb128 0x49
+ 1054 0091 13       		.uleb128 0x13
+ 1055 0092 02       		.uleb128 0x2
+ 1056 0093 18       		.uleb128 0x18
+ 1057 0094 00       		.byte	0
+ 1058 0095 00       		.byte	0
+ 1059 0096 0B       		.uleb128 0xb
+ 1060 0097 34       		.uleb128 0x34
+ 1061 0098 00       		.byte	0
+ 1062 0099 03       		.uleb128 0x3
+ 1063 009a 0E       		.uleb128 0xe
+ 1064 009b 3A       		.uleb128 0x3a
+ 1065 009c 0B       		.uleb128 0xb
+ 1066 009d 3B       		.uleb128 0x3b
+ 1067 009e 0B       		.uleb128 0xb
+ 1068 009f 49       		.uleb128 0x49
+ 1069 00a0 13       		.uleb128 0x13
+ 1070 00a1 1C       		.uleb128 0x1c
+ 1071 00a2 0B       		.uleb128 0xb
+ 1072 00a3 00       		.byte	0
+ 1073 00a4 00       		.byte	0
+ 1074 00a5 0C       		.uleb128 0xc
+ 1075 00a6 34       		.uleb128 0x34
+ 1076 00a7 00       		.byte	0
+ 1077 00a8 03       		.uleb128 0x3
+ 1078 00a9 0E       		.uleb128 0xe
+ 1079 00aa 3A       		.uleb128 0x3a
+ 1080 00ab 0B       		.uleb128 0xb
+ 1081 00ac 3B       		.uleb128 0x3b
+ 1082 00ad 0B       		.uleb128 0xb
+ 1083 00ae 49       		.uleb128 0x49
+ 1084 00af 13       		.uleb128 0x13
+ 1085 00b0 1C       		.uleb128 0x1c
+ 1086 00b1 0A       		.uleb128 0xa
+ 1087 00b2 00       		.byte	0
+ 1088 00b3 00       		.byte	0
+ 1089 00b4 0D       		.uleb128 0xd
+ 1090 00b5 898201   		.uleb128 0x4109
+ 1091 00b8 00       		.byte	0
+ 1092 00b9 11       		.uleb128 0x11
+ 1093 00ba 01       		.uleb128 0x1
+ 1094 00bb 31       		.uleb128 0x31
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 28
+
+
+ 1095 00bc 13       		.uleb128 0x13
+ 1096 00bd 00       		.byte	0
+ 1097 00be 00       		.byte	0
+ 1098 00bf 0E       		.uleb128 0xe
+ 1099 00c0 898201   		.uleb128 0x4109
+ 1100 00c3 01       		.byte	0x1
+ 1101 00c4 11       		.uleb128 0x11
+ 1102 00c5 01       		.uleb128 0x1
+ 1103 00c6 31       		.uleb128 0x31
+ 1104 00c7 13       		.uleb128 0x13
+ 1105 00c8 01       		.uleb128 0x1
+ 1106 00c9 13       		.uleb128 0x13
+ 1107 00ca 00       		.byte	0
+ 1108 00cb 00       		.byte	0
+ 1109 00cc 0F       		.uleb128 0xf
+ 1110 00cd 8A8201   		.uleb128 0x410a
+ 1111 00d0 00       		.byte	0
+ 1112 00d1 02       		.uleb128 0x2
+ 1113 00d2 18       		.uleb128 0x18
+ 1114 00d3 9142     		.uleb128 0x2111
+ 1115 00d5 18       		.uleb128 0x18
+ 1116 00d6 00       		.byte	0
+ 1117 00d7 00       		.byte	0
+ 1118 00d8 10       		.uleb128 0x10
+ 1119 00d9 898201   		.uleb128 0x4109
+ 1120 00dc 01       		.byte	0x1
+ 1121 00dd 11       		.uleb128 0x11
+ 1122 00de 01       		.uleb128 0x1
+ 1123 00df 31       		.uleb128 0x31
+ 1124 00e0 13       		.uleb128 0x13
+ 1125 00e1 00       		.byte	0
+ 1126 00e2 00       		.byte	0
+ 1127 00e3 11       		.uleb128 0x11
+ 1128 00e4 2E       		.uleb128 0x2e
+ 1129 00e5 01       		.byte	0x1
+ 1130 00e6 3F       		.uleb128 0x3f
+ 1131 00e7 19       		.uleb128 0x19
+ 1132 00e8 03       		.uleb128 0x3
+ 1133 00e9 0E       		.uleb128 0xe
+ 1134 00ea 3A       		.uleb128 0x3a
+ 1135 00eb 0B       		.uleb128 0xb
+ 1136 00ec 3B       		.uleb128 0x3b
+ 1137 00ed 0B       		.uleb128 0xb
+ 1138 00ee 49       		.uleb128 0x49
+ 1139 00ef 13       		.uleb128 0x13
+ 1140 00f0 11       		.uleb128 0x11
+ 1141 00f1 01       		.uleb128 0x1
+ 1142 00f2 12       		.uleb128 0x12
+ 1143 00f3 06       		.uleb128 0x6
+ 1144 00f4 40       		.uleb128 0x40
+ 1145 00f5 18       		.uleb128 0x18
+ 1146 00f6 9642     		.uleb128 0x2116
+ 1147 00f8 19       		.uleb128 0x19
+ 1148 00f9 01       		.uleb128 0x1
+ 1149 00fa 13       		.uleb128 0x13
+ 1150 00fb 00       		.byte	0
+ 1151 00fc 00       		.byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 29
+
+
+ 1152 00fd 12       		.uleb128 0x12
+ 1153 00fe 34       		.uleb128 0x34
+ 1154 00ff 00       		.byte	0
+ 1155 0100 03       		.uleb128 0x3
+ 1156 0101 0E       		.uleb128 0xe
+ 1157 0102 3A       		.uleb128 0x3a
+ 1158 0103 0B       		.uleb128 0xb
+ 1159 0104 3B       		.uleb128 0x3b
+ 1160 0105 0B       		.uleb128 0xb
+ 1161 0106 49       		.uleb128 0x49
+ 1162 0107 13       		.uleb128 0x13
+ 1163 0108 02       		.uleb128 0x2
+ 1164 0109 17       		.uleb128 0x17
+ 1165 010a 00       		.byte	0
+ 1166 010b 00       		.byte	0
+ 1167 010c 13       		.uleb128 0x13
+ 1168 010d 2E       		.uleb128 0x2e
+ 1169 010e 01       		.byte	0x1
+ 1170 010f 3F       		.uleb128 0x3f
+ 1171 0110 19       		.uleb128 0x19
+ 1172 0111 03       		.uleb128 0x3
+ 1173 0112 0E       		.uleb128 0xe
+ 1174 0113 3A       		.uleb128 0x3a
+ 1175 0114 0B       		.uleb128 0xb
+ 1176 0115 3B       		.uleb128 0x3b
+ 1177 0116 05       		.uleb128 0x5
+ 1178 0117 27       		.uleb128 0x27
+ 1179 0118 19       		.uleb128 0x19
+ 1180 0119 49       		.uleb128 0x49
+ 1181 011a 13       		.uleb128 0x13
+ 1182 011b 11       		.uleb128 0x11
+ 1183 011c 01       		.uleb128 0x1
+ 1184 011d 12       		.uleb128 0x12
+ 1185 011e 06       		.uleb128 0x6
+ 1186 011f 40       		.uleb128 0x40
+ 1187 0120 18       		.uleb128 0x18
+ 1188 0121 9742     		.uleb128 0x2117
+ 1189 0123 19       		.uleb128 0x19
+ 1190 0124 01       		.uleb128 0x1
+ 1191 0125 13       		.uleb128 0x13
+ 1192 0126 00       		.byte	0
+ 1193 0127 00       		.byte	0
+ 1194 0128 14       		.uleb128 0x14
+ 1195 0129 05       		.uleb128 0x5
+ 1196 012a 00       		.byte	0
+ 1197 012b 03       		.uleb128 0x3
+ 1198 012c 0E       		.uleb128 0xe
+ 1199 012d 3A       		.uleb128 0x3a
+ 1200 012e 0B       		.uleb128 0xb
+ 1201 012f 3B       		.uleb128 0x3b
+ 1202 0130 05       		.uleb128 0x5
+ 1203 0131 49       		.uleb128 0x49
+ 1204 0132 13       		.uleb128 0x13
+ 1205 0133 02       		.uleb128 0x2
+ 1206 0134 17       		.uleb128 0x17
+ 1207 0135 00       		.byte	0
+ 1208 0136 00       		.byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 30
+
+
+ 1209 0137 15       		.uleb128 0x15
+ 1210 0138 05       		.uleb128 0x5
+ 1211 0139 00       		.byte	0
+ 1212 013a 03       		.uleb128 0x3
+ 1213 013b 08       		.uleb128 0x8
+ 1214 013c 3A       		.uleb128 0x3a
+ 1215 013d 0B       		.uleb128 0xb
+ 1216 013e 3B       		.uleb128 0x3b
+ 1217 013f 05       		.uleb128 0x5
+ 1218 0140 49       		.uleb128 0x49
+ 1219 0141 13       		.uleb128 0x13
+ 1220 0142 02       		.uleb128 0x2
+ 1221 0143 17       		.uleb128 0x17
+ 1222 0144 00       		.byte	0
+ 1223 0145 00       		.byte	0
+ 1224 0146 16       		.uleb128 0x16
+ 1225 0147 34       		.uleb128 0x34
+ 1226 0148 00       		.byte	0
+ 1227 0149 03       		.uleb128 0x3
+ 1228 014a 08       		.uleb128 0x8
+ 1229 014b 3A       		.uleb128 0x3a
+ 1230 014c 0B       		.uleb128 0xb
+ 1231 014d 3B       		.uleb128 0x3b
+ 1232 014e 05       		.uleb128 0x5
+ 1233 014f 49       		.uleb128 0x49
+ 1234 0150 13       		.uleb128 0x13
+ 1235 0151 02       		.uleb128 0x2
+ 1236 0152 17       		.uleb128 0x17
+ 1237 0153 00       		.byte	0
+ 1238 0154 00       		.byte	0
+ 1239 0155 17       		.uleb128 0x17
+ 1240 0156 34       		.uleb128 0x34
+ 1241 0157 00       		.byte	0
+ 1242 0158 03       		.uleb128 0x3
+ 1243 0159 0E       		.uleb128 0xe
+ 1244 015a 3A       		.uleb128 0x3a
+ 1245 015b 0B       		.uleb128 0xb
+ 1246 015c 3B       		.uleb128 0x3b
+ 1247 015d 05       		.uleb128 0x5
+ 1248 015e 49       		.uleb128 0x49
+ 1249 015f 13       		.uleb128 0x13
+ 1250 0160 3F       		.uleb128 0x3f
+ 1251 0161 19       		.uleb128 0x19
+ 1252 0162 3C       		.uleb128 0x3c
+ 1253 0163 19       		.uleb128 0x19
+ 1254 0164 00       		.byte	0
+ 1255 0165 00       		.byte	0
+ 1256 0166 18       		.uleb128 0x18
+ 1257 0167 35       		.uleb128 0x35
+ 1258 0168 00       		.byte	0
+ 1259 0169 49       		.uleb128 0x49
+ 1260 016a 13       		.uleb128 0x13
+ 1261 016b 00       		.byte	0
+ 1262 016c 00       		.byte	0
+ 1263 016d 19       		.uleb128 0x19
+ 1264 016e 34       		.uleb128 0x34
+ 1265 016f 00       		.byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 31
+
+
+ 1266 0170 03       		.uleb128 0x3
+ 1267 0171 0E       		.uleb128 0xe
+ 1268 0172 3A       		.uleb128 0x3a
+ 1269 0173 0B       		.uleb128 0xb
+ 1270 0174 3B       		.uleb128 0x3b
+ 1271 0175 0B       		.uleb128 0xb
+ 1272 0176 49       		.uleb128 0x49
+ 1273 0177 13       		.uleb128 0x13
+ 1274 0178 3F       		.uleb128 0x3f
+ 1275 0179 19       		.uleb128 0x19
+ 1276 017a 02       		.uleb128 0x2
+ 1277 017b 18       		.uleb128 0x18
+ 1278 017c 00       		.byte	0
+ 1279 017d 00       		.byte	0
+ 1280 017e 1A       		.uleb128 0x1a
+ 1281 017f 2E       		.uleb128 0x2e
+ 1282 0180 00       		.byte	0
+ 1283 0181 3F       		.uleb128 0x3f
+ 1284 0182 19       		.uleb128 0x19
+ 1285 0183 3C       		.uleb128 0x3c
+ 1286 0184 19       		.uleb128 0x19
+ 1287 0185 6E       		.uleb128 0x6e
+ 1288 0186 0E       		.uleb128 0xe
+ 1289 0187 03       		.uleb128 0x3
+ 1290 0188 0E       		.uleb128 0xe
+ 1291 0189 3A       		.uleb128 0x3a
+ 1292 018a 0B       		.uleb128 0xb
+ 1293 018b 3B       		.uleb128 0x3b
+ 1294 018c 0B       		.uleb128 0xb
+ 1295 018d 00       		.byte	0
+ 1296 018e 00       		.byte	0
+ 1297 018f 1B       		.uleb128 0x1b
+ 1298 0190 2E       		.uleb128 0x2e
+ 1299 0191 00       		.byte	0
+ 1300 0192 3F       		.uleb128 0x3f
+ 1301 0193 19       		.uleb128 0x19
+ 1302 0194 3C       		.uleb128 0x3c
+ 1303 0195 19       		.uleb128 0x19
+ 1304 0196 6E       		.uleb128 0x6e
+ 1305 0197 0E       		.uleb128 0xe
+ 1306 0198 03       		.uleb128 0x3
+ 1307 0199 0E       		.uleb128 0xe
+ 1308 019a 3A       		.uleb128 0x3a
+ 1309 019b 0B       		.uleb128 0xb
+ 1310 019c 3B       		.uleb128 0x3b
+ 1311 019d 0B       		.uleb128 0xb
+ 1312 019e 6E       		.uleb128 0x6e
+ 1313 019f 0E       		.uleb128 0xe
+ 1314 01a0 00       		.byte	0
+ 1315 01a1 00       		.byte	0
+ 1316 01a2 00       		.byte	0
+ 1317              		.section	.debug_loc,"",%progbits
+ 1318              	.Ldebug_loc0:
+ 1319              	.LLST0:
+ 1320 0000 02000000 		.4byte	.LVL10
+ 1321 0004 14000000 		.4byte	.LVL14
+ 1322 0008 0200     		.2byte	0x2
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 32
+
+
+ 1323 000a 30       		.byte	0x30
+ 1324 000b 9F       		.byte	0x9f
+ 1325 000c 14000000 		.4byte	.LVL14
+ 1326 0010 34000000 		.4byte	.LVL20
+ 1327 0014 0100     		.2byte	0x1
+ 1328 0016 55       		.byte	0x55
+ 1329 0017 34000000 		.4byte	.LVL20
+ 1330 001b 36000000 		.4byte	.LVL21
+ 1331 001f 0200     		.2byte	0x2
+ 1332 0021 30       		.byte	0x30
+ 1333 0022 9F       		.byte	0x9f
+ 1334 0023 00000000 		.4byte	0
+ 1335 0027 00000000 		.4byte	0
+ 1336              	.LLST1:
+ 1337 002b 02000000 		.4byte	.LVL10
+ 1338 002f 22000000 		.4byte	.LVL17
+ 1339 0033 0600     		.2byte	0x6
+ 1340 0035 9E       		.byte	0x9e
+ 1341 0036 04       		.uleb128 0x4
+ 1342 0037 00000000 		.4byte	0
+ 1343 003b 22000000 		.4byte	.LVL17
+ 1344 003f 25000000 		.4byte	.LVL18-1
+ 1345 0043 0100     		.2byte	0x1
+ 1346 0045 50       		.byte	0x50
+ 1347 0046 25000000 		.4byte	.LVL18-1
+ 1348 004a 34000000 		.4byte	.LVL20
+ 1349 004e 0100     		.2byte	0x1
+ 1350 0050 54       		.byte	0x54
+ 1351 0051 34000000 		.4byte	.LVL20
+ 1352 0055 36000000 		.4byte	.LVL21
+ 1353 0059 0600     		.2byte	0x6
+ 1354 005b 9E       		.byte	0x9e
+ 1355 005c 04       		.uleb128 0x4
+ 1356 005d 00000000 		.4byte	0
+ 1357 0061 36000000 		.4byte	.LVL21
+ 1358 0065 3A000000 		.4byte	.LVL22
+ 1359 0069 0100     		.2byte	0x1
+ 1360 006b 54       		.byte	0x54
+ 1361 006c 3A000000 		.4byte	.LVL22
+ 1362 0070 40000000 		.4byte	.LFE65
+ 1363 0074 0100     		.2byte	0x1
+ 1364 0076 50       		.byte	0x50
+ 1365 0077 00000000 		.4byte	0
+ 1366 007b 00000000 		.4byte	0
+ 1367              	.LLST2:
+ 1368 007f 00000000 		.4byte	.LVL23
+ 1369 0083 0A000000 		.4byte	.LVL25
+ 1370 0087 0100     		.2byte	0x1
+ 1371 0089 50       		.byte	0x50
+ 1372 008a 0A000000 		.4byte	.LVL25
+ 1373 008e 2A000000 		.4byte	.LFE66
+ 1374 0092 0400     		.2byte	0x4
+ 1375 0094 F3       		.byte	0xf3
+ 1376 0095 01       		.uleb128 0x1
+ 1377 0096 50       		.byte	0x50
+ 1378 0097 9F       		.byte	0x9f
+ 1379 0098 00000000 		.4byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 33
+
+
+ 1380 009c 00000000 		.4byte	0
+ 1381              	.LLST3:
+ 1382 00a0 00000000 		.4byte	.LVL23
+ 1383 00a4 0A000000 		.4byte	.LVL25
+ 1384 00a8 0100     		.2byte	0x1
+ 1385 00aa 51       		.byte	0x51
+ 1386 00ab 0A000000 		.4byte	.LVL25
+ 1387 00af 18000000 		.4byte	.LVL27
+ 1388 00b3 0100     		.2byte	0x1
+ 1389 00b5 54       		.byte	0x54
+ 1390 00b6 18000000 		.4byte	.LVL27
+ 1391 00ba 22000000 		.4byte	.LVL30
+ 1392 00be 0100     		.2byte	0x1
+ 1393 00c0 56       		.byte	0x56
+ 1394 00c1 22000000 		.4byte	.LVL30
+ 1395 00c5 2A000000 		.4byte	.LFE66
+ 1396 00c9 0100     		.2byte	0x1
+ 1397 00cb 54       		.byte	0x54
+ 1398 00cc 00000000 		.4byte	0
+ 1399 00d0 00000000 		.4byte	0
+ 1400              	.LLST4:
+ 1401 00d4 00000000 		.4byte	.LVL23
+ 1402 00d8 0A000000 		.4byte	.LVL25
+ 1403 00dc 0100     		.2byte	0x1
+ 1404 00de 52       		.byte	0x52
+ 1405 00df 0A000000 		.4byte	.LVL25
+ 1406 00e3 2A000000 		.4byte	.LFE66
+ 1407 00e7 0100     		.2byte	0x1
+ 1408 00e9 57       		.byte	0x57
+ 1409 00ea 00000000 		.4byte	0
+ 1410 00ee 00000000 		.4byte	0
+ 1411              	.LLST5:
+ 1412 00f2 06000000 		.4byte	.LVL24
+ 1413 00f6 0A000000 		.4byte	.LVL25
+ 1414 00fa 0200     		.2byte	0x2
+ 1415 00fc 30       		.byte	0x30
+ 1416 00fd 9F       		.byte	0x9f
+ 1417 00fe 0A000000 		.4byte	.LVL25
+ 1418 0102 2A000000 		.4byte	.LFE66
+ 1419 0106 0100     		.2byte	0x1
+ 1420 0108 55       		.byte	0x55
+ 1421 0109 00000000 		.4byte	0
+ 1422 010d 00000000 		.4byte	0
+ 1423              	.LLST6:
+ 1424 0111 00000000 		.4byte	.LVL31
+ 1425 0115 0A000000 		.4byte	.LVL33
+ 1426 0119 0100     		.2byte	0x1
+ 1427 011b 50       		.byte	0x50
+ 1428 011c 0A000000 		.4byte	.LVL33
+ 1429 0120 38000000 		.4byte	.LFE67
+ 1430 0124 0400     		.2byte	0x4
+ 1431 0126 F3       		.byte	0xf3
+ 1432 0127 01       		.uleb128 0x1
+ 1433 0128 50       		.byte	0x50
+ 1434 0129 9F       		.byte	0x9f
+ 1435 012a 00000000 		.4byte	0
+ 1436 012e 00000000 		.4byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 34
+
+
+ 1437              	.LLST7:
+ 1438 0132 00000000 		.4byte	.LVL31
+ 1439 0136 0A000000 		.4byte	.LVL33
+ 1440 013a 0100     		.2byte	0x1
+ 1441 013c 51       		.byte	0x51
+ 1442 013d 0A000000 		.4byte	.LVL33
+ 1443 0141 26000000 		.4byte	.LVL40
+ 1444 0145 0100     		.2byte	0x1
+ 1445 0147 57       		.byte	0x57
+ 1446 0148 26000000 		.4byte	.LVL40
+ 1447 014c 30000000 		.4byte	.LVL42
+ 1448 0150 0100     		.2byte	0x1
+ 1449 0152 53       		.byte	0x53
+ 1450 0153 30000000 		.4byte	.LVL42
+ 1451 0157 34000000 		.4byte	.LVL43
+ 1452 015b 0100     		.2byte	0x1
+ 1453 015d 57       		.byte	0x57
+ 1454 015e 00000000 		.4byte	0
+ 1455 0162 00000000 		.4byte	0
+ 1456              	.LLST8:
+ 1457 0166 00000000 		.4byte	.LVL31
+ 1458 016a 0A000000 		.4byte	.LVL33
+ 1459 016e 0100     		.2byte	0x1
+ 1460 0170 52       		.byte	0x52
+ 1461 0171 0A000000 		.4byte	.LVL33
+ 1462 0175 38000000 		.4byte	.LFE67
+ 1463 0179 0100     		.2byte	0x1
+ 1464 017b 54       		.byte	0x54
+ 1465 017c 00000000 		.4byte	0
+ 1466 0180 00000000 		.4byte	0
+ 1467              	.LLST9:
+ 1468 0184 06000000 		.4byte	.LVL32
+ 1469 0188 0A000000 		.4byte	.LVL33
+ 1470 018c 0200     		.2byte	0x2
+ 1471 018e 30       		.byte	0x30
+ 1472 018f 9F       		.byte	0x9f
+ 1473 0190 0A000000 		.4byte	.LVL33
+ 1474 0194 38000000 		.4byte	.LFE67
+ 1475 0198 0100     		.2byte	0x1
+ 1476 019a 56       		.byte	0x56
+ 1477 019b 00000000 		.4byte	0
+ 1478 019f 00000000 		.4byte	0
+ 1479              	.LLST10:
+ 1480 01a3 0E000000 		.4byte	.LVL34
+ 1481 01a7 15000000 		.4byte	.LVL35-1
+ 1482 01ab 0100     		.2byte	0x1
+ 1483 01ad 50       		.byte	0x50
+ 1484 01ae 1C000000 		.4byte	.LVL37
+ 1485 01b2 24000000 		.4byte	.LVL39
+ 1486 01b6 0200     		.2byte	0x2
+ 1487 01b8 3A       		.byte	0x3a
+ 1488 01b9 9F       		.byte	0x9f
+ 1489 01ba 24000000 		.4byte	.LVL39
+ 1490 01be 30000000 		.4byte	.LVL42
+ 1491 01c2 0100     		.2byte	0x1
+ 1492 01c4 55       		.byte	0x55
+ 1493 01c5 00000000 		.4byte	0
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 35
+
+
+ 1494 01c9 00000000 		.4byte	0
+ 1495              		.section	.debug_aranges,"",%progbits
+ 1496 0000 34000000 		.4byte	0x34
+ 1497 0004 0200     		.2byte	0x2
+ 1498 0006 00000000 		.4byte	.Ldebug_info0
+ 1499 000a 04       		.byte	0x4
+ 1500 000b 00       		.byte	0
+ 1501 000c 0000     		.2byte	0
+ 1502 000e 0000     		.2byte	0
+ 1503 0010 00000000 		.4byte	.LFB64
+ 1504 0014 74000000 		.4byte	.LFE64-.LFB64
+ 1505 0018 00000000 		.4byte	.LFB65
+ 1506 001c 40000000 		.4byte	.LFE65-.LFB65
+ 1507 0020 00000000 		.4byte	.LFB66
+ 1508 0024 2A000000 		.4byte	.LFE66-.LFB66
+ 1509 0028 00000000 		.4byte	.LFB67
+ 1510 002c 38000000 		.4byte	.LFE67-.LFB67
+ 1511 0030 00000000 		.4byte	0
+ 1512 0034 00000000 		.4byte	0
+ 1513              		.section	.debug_ranges,"",%progbits
+ 1514              	.Ldebug_ranges0:
+ 1515 0000 00000000 		.4byte	.LFB64
+ 1516 0004 74000000 		.4byte	.LFE64
+ 1517 0008 00000000 		.4byte	.LFB65
+ 1518 000c 40000000 		.4byte	.LFE65
+ 1519 0010 00000000 		.4byte	.LFB66
+ 1520 0014 2A000000 		.4byte	.LFE66
+ 1521 0018 00000000 		.4byte	.LFB67
+ 1522 001c 38000000 		.4byte	.LFE67
+ 1523 0020 00000000 		.4byte	0
+ 1524 0024 00000000 		.4byte	0
+ 1525              		.section	.debug_line,"",%progbits
+ 1526              	.Ldebug_line0:
+ 1527 0000 C2020000 		.section	.debug_str,"MS",%progbits,1
+ 1527      02002002 
+ 1527      00000201 
+ 1527      FB0E0D00 
+ 1527      01010101 
+ 1528              	.LASF46:
+ 1529 0000 73656E73 		.ascii	"sensors_\000"
+ 1529      6F72735F 
+ 1529      00
+ 1530              	.LASF5:
+ 1531 0009 5F5F696E 		.ascii	"__int32_t\000"
+ 1531      7433325F 
+ 1531      7400
+ 1532              	.LASF29:
+ 1533 0013 4144435F 		.ascii	"ADC_Battery_Start\000"
+ 1533      42617474 
+ 1533      6572795F 
+ 1533      53746172 
+ 1533      7400
+ 1534              	.LASF27:
+ 1535 0025 74687265 		.ascii	"threshold\000"
+ 1535      73686F6C 
+ 1535      6400
+ 1536              	.LASF3:
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 36
+
+
+ 1537 002f 73686F72 		.ascii	"short unsigned int\000"
+ 1537      7420756E 
+ 1537      7369676E 
+ 1537      65642069 
+ 1537      6E7400
+ 1538              	.LASF32:
+ 1539 0042 7265666C 		.ascii	"reflectance_digital\000"
+ 1539      65637461 
+ 1539      6E63655F 
+ 1539      64696769 
+ 1539      74616C00 
+ 1540              	.LASF12:
+ 1541 0056 696E7433 		.ascii	"int32_t\000"
+ 1541      325F7400 
+ 1542              	.LASF24:
+ 1543 005e 5F726561 		.ascii	"_read\000"
+ 1543      6400
+ 1544              	.LASF14:
+ 1545 0064 666C6F61 		.ascii	"float\000"
+ 1545      7400
+ 1546              	.LASF23:
+ 1547 006a 66696C65 		.ascii	"file\000"
+ 1547      00
+ 1548              	.LASF1:
+ 1549 006f 756E7369 		.ascii	"unsigned char\000"
+ 1549      676E6564 
+ 1549      20636861 
+ 1549      7200
+ 1550              	.LASF43:
+ 1551 007d 474E5520 		.ascii	"GNU C11 5.4.1 20160609 (release) [ARM/embedded-5-br"
+ 1551      43313120 
+ 1551      352E342E 
+ 1551      31203230 
+ 1551      31363036 
+ 1552 00b0 616E6368 		.ascii	"anch revision 237715] -mcpu=cortex-m3 -mthumb -g -O"
+ 1552      20726576 
+ 1552      6973696F 
+ 1552      6E203233 
+ 1552      37373135 
+ 1553 00e3 67202D66 		.ascii	"g -ffunction-sections -ffat-lto-objects\000"
+ 1553      66756E63 
+ 1553      74696F6E 
+ 1553      2D736563 
+ 1553      74696F6E 
+ 1554              	.LASF41:
+ 1555 010b 55415254 		.ascii	"UART_1_PutChar\000"
+ 1555      5F315F50 
+ 1555      75744368 
+ 1555      617200
+ 1556              	.LASF13:
+ 1557 011a 696E7431 		.ascii	"int16\000"
+ 1557      3600
+ 1558              	.LASF7:
+ 1559 0120 6C6F6E67 		.ascii	"long unsigned int\000"
+ 1559      20756E73 
+ 1559      69676E65 
+ 1559      6420696E 
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 37
+
+
+ 1559      7400
+ 1560              	.LASF26:
+ 1561 0132 49544D5F 		.ascii	"ITM_RxBuffer\000"
+ 1561      52784275 
+ 1561      66666572 
+ 1561      00
+ 1562              	.LASF4:
+ 1563 013f 5F5F7569 		.ascii	"__uint16_t\000"
+ 1563      6E743136 
+ 1563      5F7400
+ 1564              	.LASF15:
+ 1565 014a 646F7562 		.ascii	"double\000"
+ 1565      6C6500
+ 1566              	.LASF21:
+ 1567 0151 6D61696E 		.ascii	"main\000"
+ 1567      00
+ 1568              	.LASF35:
+ 1569 0156 6D6F746F 		.ascii	"motor_sharp_turn\000"
+ 1569      725F7368 
+ 1569      6172705F 
+ 1569      7475726E 
+ 1569      00
+ 1570              	.LASF10:
+ 1571 0167 756E7369 		.ascii	"unsigned int\000"
+ 1571      676E6564 
+ 1571      20696E74 
+ 1571      00
+ 1572              	.LASF38:
+ 1573 0174 4144435F 		.ascii	"ADC_Battery_GetResult16\000"
+ 1573      42617474 
+ 1573      6572795F 
+ 1573      47657452 
+ 1573      6573756C 
+ 1574              	.LASF9:
+ 1575 018c 6C6F6E67 		.ascii	"long long unsigned int\000"
+ 1575      206C6F6E 
+ 1575      6720756E 
+ 1575      7369676E 
+ 1575      65642069 
+ 1576              	.LASF31:
+ 1577 01a3 6D6F746F 		.ascii	"motor_start\000"
+ 1577      725F7374 
+ 1577      61727400 
+ 1578              	.LASF39:
+ 1579 01af 4144435F 		.ascii	"ADC_Battery_CountsTo_Volts\000"
+ 1579      42617474 
+ 1579      6572795F 
+ 1579      436F756E 
+ 1579      7473546F 
+ 1580              	.LASF37:
+ 1581 01ca 4144435F 		.ascii	"ADC_Battery_IsEndConversion\000"
+ 1581      42617474 
+ 1581      6572795F 
+ 1581      4973456E 
+ 1581      64436F6E 
+ 1582              	.LASF49:
+ 1583 01e6 5F5F6275 		.ascii	"__builtin_puts\000"
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 38
+
+
+ 1583      696C7469 
+ 1583      6E5F7075 
+ 1583      747300
+ 1584              	.LASF20:
+ 1585 01f5 766F6C74 		.ascii	"volts\000"
+ 1585      7300
+ 1586              	.LASF17:
+ 1587 01fb 6C6F6E67 		.ascii	"long double\000"
+ 1587      20646F75 
+ 1587      626C6500 
+ 1588              	.LASF22:
+ 1589 0207 5F777269 		.ascii	"_write\000"
+ 1589      746500
+ 1590              	.LASF18:
+ 1591 020e 73697A65 		.ascii	"sizetype\000"
+ 1591      74797065 
+ 1591      00
+ 1592              	.LASF8:
+ 1593 0217 6C6F6E67 		.ascii	"long long int\000"
+ 1593      206C6F6E 
+ 1593      6720696E 
+ 1593      7400
+ 1594              	.LASF30:
+ 1595 0225 42617474 		.ascii	"BatteryLed_Write\000"
+ 1595      6572794C 
+ 1595      65645F57 
+ 1595      72697465 
+ 1595      00
+ 1596              	.LASF44:
+ 1597 0236 6D61696E 		.ascii	"main.c\000"
+ 1597      2E6300
+ 1598              	.LASF16:
+ 1599 023d 63686172 		.ascii	"char\000"
+ 1599      00
+ 1600              	.LASF19:
+ 1601 0242 61646372 		.ascii	"adcresult\000"
+ 1601      6573756C 
+ 1601      7400
+ 1602              	.LASF40:
+ 1603 024c 7072696E 		.ascii	"printf\000"
+ 1603      746600
+ 1604              	.LASF25:
+ 1605 0253 636F756E 		.ascii	"count\000"
+ 1605      7400
+ 1606              	.LASF2:
+ 1607 0259 73686F72 		.ascii	"short int\000"
+ 1607      7420696E 
+ 1607      7400
+ 1608              	.LASF47:
+ 1609 0263 63686563 		.ascii	"checkBat\000"
+ 1609      6B426174 
+ 1609      00
+ 1610              	.LASF11:
+ 1611 026c 75696E74 		.ascii	"uint16_t\000"
+ 1611      31365F74 
+ 1611      00
+ 1612              	.LASF33:
+ARM GAS  C:\Users\wille\AppData\Local\Temp\ccFUieKB.s 			page 39
+
+
+ 1613 0275 5357315F 		.ascii	"SW1_Read\000"
+ 1613      52656164 
+ 1613      00
+ 1614              	.LASF6:
+ 1615 027e 6C6F6E67 		.ascii	"long int\000"
+ 1615      20696E74 
+ 1615      00
+ 1616              	.LASF48:
+ 1617 0287 70757473 		.ascii	"puts\000"
+ 1617      00
+ 1618              	.LASF0:
+ 1619 028c 7369676E 		.ascii	"signed char\000"
+ 1619      65642063 
+ 1619      68617200 
+ 1620              	.LASF45:
+ 1621 0298 433A5C55 		.ascii	"C:\\Users\\wille\\OneDrive\\Tiedostot\\Zumo01\\Zumo"
+ 1621      73657273 
+ 1621      5C77696C 
+ 1621      6C655C4F 
+ 1621      6E654472 
+ 1622 02c5 426F742E 		.ascii	"Bot.cydsn\000"
+ 1622      63796473 
+ 1622      6E00
+ 1623              	.LASF36:
+ 1624 02cf 4144435F 		.ascii	"ADC_Battery_StartConvert\000"
+ 1624      42617474 
+ 1624      6572795F 
+ 1624      53746172 
+ 1624      74436F6E 
+ 1625              	.LASF34:
+ 1626 02e8 43794465 		.ascii	"CyDelay\000"
+ 1626      6C617900 
+ 1627              	.LASF42:
+ 1628 02f0 55415254 		.ascii	"UART_1_GetChar\000"
+ 1628      5F315F47 
+ 1628      65744368 
+ 1628      617200
+ 1629              	.LASF28:
+ 1630 02ff 55415254 		.ascii	"UART_1_Start\000"
+ 1630      5F315F53 
+ 1630      74617274 
+ 1630      00
+ 1631              		.ident	"GCC: (GNU Tools for ARM Embedded Processors) 5.4.1 20160609 (release) [ARM/embedded-5-bran

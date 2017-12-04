@@ -1,0 +1,6 @@
+C:\Users\wille\OneDrive\Tiedostot\Zumo01\ZumoBot.cydsn\ZumoBot.cyprj|e72386b4-a248-445d-b212-11cb878e4aae
+D:\koulu\Laitteet\PsoC\PSoC Creator\4.1\PSoC Creator\psoc\content\default\CyAnnotationLibrary\CyAnnotationLibrary.cylib\CyAnnotationLibrary.cyprj|4eff6295-f296-4ecd-8a6f-bdb8e4adb4d8
+C:\Users\wille\OneDrive\Tiedostot\PSoC Creator\4.1\Downloads ( 4.1).cylib\Downloads ( 4.1).cyprj|50c09bf4-6923-433a-96df-fb70beeeecf3
+D:\koulu\Laitteet\PsoC\PSoC Creator\4.1\PSoC Creator\psoc\content\cycomponentlibraryupdates\CyComponentLibraryUpdates.cylib\CyComponentLibraryUpdates.cyprj|9fe3a2c0-db62-4b3e-8eb4-c12b6fa78d0a
+D:\koulu\Laitteet\PsoC\PSoC Creator\4.1\PSoC Creator\psoc\content\cycomponentlibrary\CyComponentLibrary.cylib\CyComponentLibrary.cyprj|2cbb9ae4-1ea0-417a-bbfd-09ee191924ae
+D:\koulu\Laitteet\PsoC\PSoC Creator\4.1\PSoC Creator\psoc\content\cyprimitives\CyPrimitives.cylib\CyPrimitives.cyprj|a6b11358-b090-4f2c-b419-00dc7814d390
